@@ -1,0 +1,331 @@
+{
+  "contractName": "itemsFactory",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "get1",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.7.6+commit.7338295f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"get1\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"The itemsFactory contract does this and that...\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"/C/Users/fboud/OneDrive/Documents/Alyra/projetFinal/contracts/itemsFactory.sol\":\"itemsFactory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/fboud/OneDrive/Documents/Alyra/projetFinal/contracts/itemsFactory.sol\":{\"keccak256\":\"0x6ae18284ffdb544d783766c23b3855269d8aa83bea08b0b4cb6b8dc81d7179cf\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://b3bacb7bb42e060b71487b1bc077bc82a27dc809e55c180b3e40b8742c43aff8\",\"dweb:/ipfs/QmQveDZraJwUyTwH4f4zqntuQrSZQWrz4ATZUTALMTmQdD\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b5060888061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063054c1a7514602d575b600080fd5b60336049565b6040518082815260200191505060405180910390f35b6000600190509056fea264697066735822122084fce14d54abbc28be621a5b6c51c873a7ca6cd00e154e06c026794ee4681bef64736f6c63430007060033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063054c1a7514602d575b600080fd5b60336049565b6040518082815260200191505060405180910390f35b6000600190509056fea264697066735822122084fce14d54abbc28be621a5b6c51c873a7ca6cd00e154e06c026794ee4681bef64736f6c63430007060033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "127:91:1:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "127:91:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;158:57;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;190:4;208:1;201:8;;158:57;:::o",
+  "source": "// SPDX-License-Identifier: GPL-3.0\r\n\r\npragma solidity 0.7.6;\r\n\r\n/**\r\n * The itemsFactory contract does this and that...\r\n */\r\ncontract itemsFactory {\r\n  \r\n  function get1() public returns (uint){\r\n  \treturn 1;\r\n  }\r\n}\r\n",
+  "sourcePath": "C:/Users/fboud/OneDrive/Documents/Alyra/projetFinal/contracts/itemsFactory.sol",
+  "ast": {
+    "absolutePath": "/C/Users/fboud/OneDrive/Documents/Alyra/projetFinal/contracts/itemsFactory.sol",
+    "exportedSymbols": {
+      "itemsFactory": [
+        48
+      ]
+    },
+    "id": 49,
+    "license": "GPL-3.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 38,
+        "literals": [
+          "solidity",
+          "0.7",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "39:22:1"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": {
+          "id": 39,
+          "nodeType": "StructuredDocumentation",
+          "src": "65:60:1",
+          "text": " The itemsFactory contract does this and that..."
+        },
+        "fullyImplemented": true,
+        "id": 48,
+        "linearizedBaseContracts": [
+          48
+        ],
+        "name": "itemsFactory",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 46,
+              "nodeType": "Block",
+              "src": "195:20:1",
+              "statements": [
+                {
+                  "expression": {
+                    "hexValue": "31",
+                    "id": 44,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "208:1:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_1_by_1",
+                      "typeString": "int_const 1"
+                    },
+                    "value": "1"
+                  },
+                  "functionReturnParameters": 43,
+                  "id": 45,
+                  "nodeType": "Return",
+                  "src": "201:8:1"
+                }
+              ]
+            },
+            "functionSelector": "054c1a75",
+            "id": 47,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "get1",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 40,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "171:2:1"
+            },
+            "returnParameters": {
+              "id": 43,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 42,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 47,
+                  "src": "190:4:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 41,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "190:4:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "189:6:1"
+            },
+            "scope": 48,
+            "src": "158:57:1",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "public"
+          }
+        ],
+        "scope": 49,
+        "src": "127:91:1"
+      }
+    ],
+    "src": "39:181:1"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/C/Users/fboud/OneDrive/Documents/Alyra/projetFinal/contracts/itemsFactory.sol",
+      "exportedSymbols": {
+        "itemsFactory": [
+          48
+        ]
+      },
+      "license": "GPL-3.0"
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "0.7",
+            ".6"
+          ]
+        },
+        "id": 38,
+        "name": "PragmaDirective",
+        "src": "39:22:1"
+      },
+      {
+        "attributes": {
+          "abstract": false,
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "contract",
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+            48
+          ],
+          "name": "itemsFactory",
+          "scope": 49
+        },
+        "children": [
+          {
+            "attributes": {
+              "text": " The itemsFactory contract does this and that..."
+            },
+            "id": 39,
+            "name": "StructuredDocumentation",
+            "src": "65:60:1"
+          },
+          {
+            "attributes": {
+              "functionSelector": "054c1a75",
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "get1",
+              "scope": 48,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 40,
+                "name": "ParameterList",
+                "src": "171:2:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "mutability": "mutable",
+                      "name": "",
+                      "scope": 47,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 41,
+                        "name": "ElementaryTypeName",
+                        "src": "190:4:1"
+                      }
+                    ],
+                    "id": 42,
+                    "name": "VariableDeclaration",
+                    "src": "190:4:1"
+                  }
+                ],
+                "id": 43,
+                "name": "ParameterList",
+                "src": "189:6:1"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 43
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "hexvalue": "31",
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "lValueRequested": false,
+                          "token": "number",
+                          "type": "int_const 1",
+                          "value": "1"
+                        },
+                        "id": 44,
+                        "name": "Literal",
+                        "src": "208:1:1"
+                      }
+                    ],
+                    "id": 45,
+                    "name": "Return",
+                    "src": "201:8:1"
+                  }
+                ],
+                "id": 46,
+                "name": "Block",
+                "src": "195:20:1"
+              }
+            ],
+            "id": 47,
+            "name": "FunctionDefinition",
+            "src": "158:57:1"
+          }
+        ],
+        "id": 48,
+        "name": "ContractDefinition",
+        "src": "127:91:1"
+      }
+    ],
+    "id": 49,
+    "name": "SourceUnit",
+    "src": "39:181:1"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.7.6+commit.7338295f.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-07-18T11:07:24.945Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "notice": "The itemsFactory contract does this and that...",
+    "version": 1
+  }
+}
