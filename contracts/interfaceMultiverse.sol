@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0
-
 pragma solidity 0.8.1;
 
 contract interfaceMultiverse{
@@ -27,6 +26,4 @@ contract interfaceMultiverse{
 		
 		multiverseData[multiverseIds[_login]] = Player(_login, _rewardLv1, _rewardLv2, true );
 	}
-
-
 }

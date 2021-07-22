@@ -28,14 +28,29 @@ contract("itemsFactory", accounts => {
 		expect(await itemsFactoryInstance.get1.call()).to.be.bignumber.equal(number);		
 	});
 
-	it("has a name", async () =>{
-		expect(await itemsFactoryInstance.name()).to.equal(_name);		
-	});
+	context ("ERC 721", async () => {
 
-	it("has a symbol", async () =>{
-		expect(await itemsFactoryInstance.symbol()).to.equal(_symbol);
-	});
-	context ("create tour eiffel in paper" , async () => {
+		it("has a name", async () =>{
+			expect(await itemsFactoryInstance.name()).to.equal(_name);		
+		});
+
+		it("has a symbol", async () =>{
+			expect(await itemsFactoryInstance.symbol()).to.equal(_symbol);
+		});
+
+		it("create an item and attribute it to the owner", async () =>{
+		
+		let _balance = new BN(1);
+		await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+		expect(await itemsFactoryInstance.balanceOf(_owner)).to.be.bignumber.equal(_balance);
+		expect(await itemsFactoryInstance.ownerOf(0)).to.equal(_owner);
+		});
+
+
+
+	})
+
+	context ("Create tour eiffel in paper" , async () => {
 
 		xit("create the item Tour eiffel code 294", async () => {
 
@@ -51,52 +66,81 @@ contract("itemsFactory", accounts => {
 			expect(valeur).to.be.bignumber.equal(targetedComposition);
 			})
 
-		it("create the first exemplaire item Tour eiffel in paper code 294509001", async () => {
+		/*xit("create the first exemplaire item Tour eiffel in paper code 294509001", async () => {
 
 			let targetedComposition = new BN(294509001);
 			const valeur = await itemsFactoryInstance.createItem.call(_monument, _item,  {from: _owner});
 			expect(valeur).to.be.bignumber.equal(targetedComposition);
+			})*/
+
+		it("create the first exemplaire item Tour eiffel in paper code 294509001", async () => {
+
+			let targetedComposition = new BN(294509001);
+			await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+			let newItem = await itemsFactoryInstance.items.call(0);
+			expect(newItem[0]).to.equal(_item);
+			expect(newItem[1]).to.be.bignumber.equal(targetedComposition);
+			expect(newItem[2]).to.be.bignumber.equal(new BN(2));
+			expect(newItem[3]).to.be.false;
 			})
 
 		
 		it("create the 2 first exemplaire item Tour eiffel in paper code 294509001 and 294509002" , async () => {
 			
+			let targetedComposition1 = new BN(294509001);
 			let targetedComposition2 = new BN(294509002);
 			await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
-			const valeur2 =  await itemsFactoryInstance.createItem.call(_monument, _item,  {from: _owner});
-			expect(valeur2).to.be.bignumber.equal(targetedComposition2);
+			await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+			let newItem1 = await itemsFactoryInstance.items.call(0);
+			let newItem2 = await itemsFactoryInstance.items.call(1);
+
+			expect(newItem1[0]).to.equal(_item);
+			expect(newItem1[1]).to.be.bignumber.equal(targetedComposition1);
+			expect(newItem1[2]).to.be.bignumber.equal(new BN(2));
+			expect(newItem1[3]).to.be.false;
+
+			expect(newItem2[0]).to.equal(_item);
+			expect(newItem2[1]).to.be.bignumber.equal(targetedComposition2);
+			expect(newItem2[2]).to.be.bignumber.equal(new BN(2));
+			expect(newItem2[3]).to.be.false;
+
 			})
 			
 
 	});
 
-	context ("create a gold stone" , async () => {
+	context ("Create a gold stone" , async () => {
 
 		it("create the first exemplaire item Pepite or code 000992001", async () => {
 
 			let targetedComposition = new BN(000992001);
-			const valeur = await itemsFactoryInstance.createItem.call(_material, _stone,  {from: _owner});
-			expect(valeur).to.be.bignumber.equal(targetedComposition);
+			await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+			let newItem = await itemsFactoryInstance.items.call(0);
+
+			expect(newItem[0]).to.equal(_stone);
+			expect(newItem[1]).to.be.bignumber.equal(targetedComposition);
+			expect(newItem[2]).to.be.bignumber.equal(new BN(2));
+			expect(newItem[3]).to.be.false;
 			})
 
 	});
 
-	context ("create a card" , async () => {
+	context ("Create a card" , async () => {
 
-		it("create the first card Tour eiffel code 2940000001", async () => {
+		it("create the first card Tour eiffel code 294000001", async () => {
 
 			let targetedComposition = new BN(294000001);
-			const valeur = await itemsFactoryInstance.createItem.call(_card, _item,  {from: _owner});
-			expect(valeur).to.be.bignumber.equal(targetedComposition);
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			let newItem = await itemsFactoryInstance.items.call(0);
+
+			expect(newItem[0]).to.equal(_item);
+			expect(newItem[1]).to.be.bignumber.equal(targetedComposition);
+			expect(newItem[2]).to.be.bignumber.equal(new BN(1));
+			expect(newItem[3]).to.be.false;
 			})
 	});
 
-	it("create an item and attribuate it to the owner", async () =>{
-		let _balance = new BN(1);
-		await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
-		expect(await itemsFactoryInstance.balanceOf(_owner)).to.be.bignumber.equal(_balance);
-	});
-
+	
 	it("set a new player", async ()=> {
 
 		await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
@@ -106,10 +150,40 @@ contract("itemsFactory", accounts => {
 	it("update a player", async () => {
 
 		await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
-		await itemsFactoryInstance.updateMultiversePlayer( "albert", 2, 2);
-		expect(await itemsFactoryInstance.multiverseData.call(_player1)).to.include({login : "albert"});
+		await itemsFactoryInstance.updateMultiversePlayer( "albert", 2, 3);
+		let newPlayer = await itemsFactoryInstance.multiverseData.call(_player1);
+		expect(newPlayer[0]).to.equal("albert");
+		expect(newPlayer[1]).to.be.bignumber.equal(new BN(2));
+		expect(newPlayer[2]).to.be.bignumber.equal(new BN(3));
 	})
 
+	it("get a random item in the list of available items (a creuser)", async ()=> {
+
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+		await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
 
 
+		
+		let randItem = await itemsFactoryInstance.getAvailableItem();
+
+		expect(randItem).not.to.be.gte.BN(5);
+
+
+	})
+	xit("create a random number in the list of available items", async () => {
+
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		/*await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+		await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});*/
+
+		const test = await itemsFactoryInstance.getReward.call();
+		console.log(test);
+	})
 })

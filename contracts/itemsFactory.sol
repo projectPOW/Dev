@@ -12,7 +12,12 @@ import "@openzeppelin/openzeppelin-contracts-master/contracts/access/Ownable.sol
  */
 contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
   
-  constructor () ERC721("PowItems","POW"){}
+  address _owner;
+  
+  constructor () ERC721("PowItems","POW"){
+
+    _owner = msg.sender;
+  }
 
   string _monument = "Monument";
   string _material = "Material";
@@ -22,43 +27,94 @@ contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
   struct Item{
   	string name;
   	uint composition;
+    uint levelItem;
+    bool locked;
   }
 
   Item[] public items;
   mapping (uint => uint) public exemplaire;
 
   
-  function createItem(string memory _type,string memory _name) public onlyOwner returns (uint) {
+  function createItem(string memory _type,string memory _name) public onlyOwner {
     
     uint codeFirstPart;
     uint codeSecondPart;
     uint codeThirdPart;
     uint codeComposition;
     uint tokenId = items.length;
+    uint level;
 
     if ((keccak256 (bytes(_type))) == (keccak256 (bytes(_monument)))) {
 
       codeFirstPart =  getCodeMonument(_name);
       codeSecondPart = getCodeMaterial ("paper");
+      level = 2;
     } 
 
     if ((keccak256 (bytes(_type))) == (keccak256 (bytes(_material)))){
       codeSecondPart = getCodeMaterial(_name);
+      level = 2;
     }
 
     if ((keccak256 (bytes(_type))) == (keccak256 (bytes(_card)))){
       codeFirstPart =  getCodeMonument(_name);
+      level = 1;
     }
     codeThirdPart = exemplaire[getCodeBaseComposition(codeFirstPart,codeSecondPart)]+1;
     codeComposition = getCodeComposition(codeFirstPart,codeSecondPart,codeThirdPart);
 
     exemplaire[getCodeBaseComposition(codeFirstPart,codeSecondPart)] = codeThirdPart;
     
-    items.push(Item(_name, codeComposition));
+    items.push(Item(_name, codeComposition,level, false));
     _safeMint(msg.sender, tokenId);
-
-    return codeComposition;
     
+  }
+
+  function getReward () public view returns(Item memory){
+
+    
+
+    Item memory myItem = items[getAvailableItem()];
+
+    return myItem;
+    
+  }
+  
+
+  
+  function getAvailableItem() public view returns(uint){
+
+    uint sizeArray;
+    uint Id;
+    uint nonce = 10;
+
+    for (uint k; k < items.length; k++){
+      if (ownerOf(k) == _owner ){
+        if (!items[k].locked){
+          sizeArray++;
+        }
+      }
+    }
+
+    uint[] memory availableItem = new uint[](sizeArray);
+   
+   for (uint k; k < items.length; k++){
+      if (ownerOf(k) == _owner ){
+        if (!items[k].locked){
+         availableItem[Id] = k;
+         Id++;
+        }
+      }
+    }
+
+    if (availableItem.length == 0){
+      revert('Auncun item dispo');
+    } else {
+
+    uint randReward = uint(keccak256 (abi.encodePacked(block.timestamp, msg.sender, nonce))) % availableItem.length;
+
+    return availableItem[randReward];
+    }
   }
 
   function getCodeMonument(string memory _nameMonument) internal returns (uint){
