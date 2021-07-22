@@ -2,6 +2,9 @@ const itemsFactory = artifacts.require("itemsFactory");
 const { expect } = require('chai');
 const { BN } = require('@openzeppelin/test-helpers');
 const time = require("./helpers/time");
+var chai = require('chai');
+var bnChai = require('bn-chai');
+chai.use(bnChai(BN));
 
 
 
@@ -140,50 +143,95 @@ contract("itemsFactory", accounts => {
 			})
 	});
 
-	
-	it("set a new player", async ()=> {
+	context("Add player", async () => {
+		it("set a new player", async ()=> {
 
-		await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
-		expect(await itemsFactoryInstance.multiverseIds.call("albert")).to.equal(_player1);
-	})
+			await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
+			expect(await itemsFactoryInstance.multiverseIds.call("albert")).to.equal(_player1);
+		})
 
-	it("update a player", async () => {
+		it("update a player", async () => {
 
-		await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
-		await itemsFactoryInstance.updateMultiversePlayer( "albert", 2, 3);
-		let newPlayer = await itemsFactoryInstance.multiverseData.call(_player1);
-		expect(newPlayer[0]).to.equal("albert");
-		expect(newPlayer[1]).to.be.bignumber.equal(new BN(2));
-		expect(newPlayer[2]).to.be.bignumber.equal(new BN(3));
-	})
+			await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
+			await itemsFactoryInstance.updateMultiversePlayer( "albert", 2, 3);
+			let newPlayer = await itemsFactoryInstance.multiverseData.call(_player1);
+			expect(newPlayer[0]).to.equal("albert");
+			expect(newPlayer[1]).to.be.bignumber.equal(new BN(2));
+			expect(newPlayer[2]).to.be.bignumber.equal(new BN(3));
+		})
+	});
 
-	it("get a random item in the list of available items (a creuser)", async ()=> {
+	describe("Obtain your rewards", async ()=> {
 
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
-		await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+		it("get a random item in the list of available items", async ()=> {
 
-
-		
-		let randItem = await itemsFactoryInstance.getAvailableItem();
-
-		expect(randItem).not.to.be.gte.BN(5);
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+			await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
 
 
-	})
-	xit("create a random number in the list of available items", async () => {
+			
+			let randItem = await itemsFactoryInstance.getAvailableItem(1);
 
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
-		/*await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
-		await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
-		await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});*/
+			expect(randItem).not.to.be.gt.BN(5);
 
-		const test = await itemsFactoryInstance.getReward.call();
-		console.log(test);
-	})
+
+		})
+
+		it("get a random item lvl1", async () => {
+
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+			await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+
+			await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
+			await itemsFactoryInstance.updateMultiversePlayer( "albert", 3, 0);
+
+			expect(await itemsFactoryInstance.balanceOf(_player1)).to.be.bignumber.equal(new BN(0));
+
+			await itemsFactoryInstance.getReward( {from: _player1} );
+
+			expect(await itemsFactoryInstance.balanceOf(_player1)).to.be.bignumber.equal(new BN(3));
+
+			/*console.log(await itemsFactoryInstance.ownerOf(0));
+			console.log(await itemsFactoryInstance.ownerOf(1));
+			console.log(await itemsFactoryInstance.ownerOf(2));
+			console.log(await itemsFactoryInstance.ownerOf(3));
+			console.log(await itemsFactoryInstance.ownerOf(4));
+			console.log(await itemsFactoryInstance.ownerOf(5));*/
+		})
+
+		it("get a random item lvl2", async () => {
+
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_material, _stone,  {from: _owner});
+			await itemsFactoryInstance.createItem(_monument, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+			await itemsFactoryInstance.createItem(_card, _item,  {from: _owner});
+
+			await itemsFactoryInstance.setMultiversePlayer( _player1, "albert");
+			await itemsFactoryInstance.updateMultiversePlayer( "albert", 0, 1);
+
+			expect(await itemsFactoryInstance.balanceOf(_player1)).to.be.bignumber.equal(new BN(0));
+
+			await itemsFactoryInstance.getReward( {from: _player1} );
+
+			expect(await itemsFactoryInstance.balanceOf(_player1)).to.be.bignumber.equal(new BN(1));
+
+			/*console.log(await itemsFactoryInstance.ownerOf(0));
+			console.log(await itemsFactoryInstance.ownerOf(1));
+			console.log(await itemsFactoryInstance.ownerOf(2));
+			console.log(await itemsFactoryInstance.ownerOf(3));
+			console.log(await itemsFactoryInstance.ownerOf(4));
+			console.log(await itemsFactoryInstance.ownerOf(5));*/
+		})
+	});
+
 })

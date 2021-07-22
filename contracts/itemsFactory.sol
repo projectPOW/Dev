@@ -22,6 +22,7 @@ contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
   string _monument = "Monument";
   string _material = "Material";
   string _card = "Card";
+  uint randNonce = 1;
 
  
   struct Item{
@@ -70,27 +71,41 @@ contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
     
   }
 
-  function getReward () public view returns(Item memory){
+  function getReward () public returns(Item memory){
 
-    
+    require (multiverseData[msg.sender].rewardLv1 != 0 || multiverseData[msg.sender].rewardLv2 != 0, "You have no rewards to get");
 
-    Item memory myItem = items[getAvailableItem()];
+    Item memory myItem;
 
+    if (multiverseData[msg.sender].rewardLv1 != 0){
+      for (uint i = multiverseData[msg.sender].rewardLv1; i > 0; i-- ){
+        uint idItem =  getAvailableItem(1); 
+         _transfer(_owner, msg.sender, idItem);
+      }
+      multiverseData[msg.sender].rewardLv1 = 0;
+    }
+
+    if (multiverseData[msg.sender].rewardLv2 != 0){
+      for (uint i = multiverseData[msg.sender].rewardLv2; i > 0; i-- ){
+        uint idItem =  getAvailableItem(2); 
+        _transfer(_owner, msg.sender, idItem);
+      }
+      multiverseData[msg.sender].rewardLv2 = 0;
+    }
     return myItem;
-    
   }
   
 
   
-  function getAvailableItem() public view returns(uint){
+  function getAvailableItem(uint _level) public view returns(uint){
 
     uint sizeArray;
     uint Id;
-    uint nonce = 10;
+    randNonce ++;
 
     for (uint k; k < items.length; k++){
       if (ownerOf(k) == _owner ){
-        if (!items[k].locked){
+        if (!items[k].locked && items[k].levelItem == _level){
           sizeArray++;
         }
       }
@@ -100,7 +115,7 @@ contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
    
    for (uint k; k < items.length; k++){
       if (ownerOf(k) == _owner ){
-        if (!items[k].locked){
+        if (!items[k].locked && items[k].levelItem == _level){
          availableItem[Id] = k;
          Id++;
         }
@@ -108,7 +123,7 @@ contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
     }
 
     if (availableItem.length == 0){
-      revert('Auncun item dispo');
+      revert('There is not enough item availbale, please come back later');
     } else {
 
     uint randReward = uint(keccak256 (abi.encodePacked(block.timestamp, msg.sender, nonce))) % availableItem.length;
