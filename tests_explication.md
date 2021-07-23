@@ -51,7 +51,7 @@ Il est doté d'une partie permettant d'afficher les ordres de vente avec leur st
 Pour écrire ce code nous allons utiliser des contrats Uniswap déjà configurer. Les tests sont à venir.
 
 
-## Classe POWTournament.sol
+## Contrat POWTournament.sol
 
 ## Test ERC20
 
