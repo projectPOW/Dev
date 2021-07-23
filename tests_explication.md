@@ -51,13 +51,13 @@ Il est doté d'une partie permettant d'afficher les ordres de vente avec leur st
 Pour écrire ce code nous allons utiliser des contrats Uniswap déjà configurer. Les tests sont à venir.
 
 
-#Classe POWTournament.sol
+## Classe POWTournament.sol
 
-##Test ERC20
+## Test ERC20
 
 Nous commençons par vérifier quelques fonctions de base de l’ERC20 afin de nous assurer que notre token est conforme, Name et Symbole
 
-##Test du type et de la durée du quizz
+## Test du type et de la durée du quizz
 
 Dans nos spécifications, le système de jeu POW doit permettre à l’administrateur de fixer la durée du quizz ainsi que le thème de ce dernier.
 
