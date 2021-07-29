@@ -2,150 +2,111 @@
 
 pragma solidity 0.8.1;
 
-import "./interfaceMultiverse.sol";
-import "@openzeppelin/openzeppelin-contracts-master/contracts/token/ERC721/ERC721.sol";
+import "./interfaceMultiverseNFT.sol";
+import "@openzeppelin/openzeppelin-contracts-master/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/openzeppelin-contracts-master/contracts/access/Ownable.sol";
 
 
 /**
- * The itemsFactory contract does this and that...
+ * @title Administrator factory for Items
+ * @notice In this contract the administrator creates items and set them in the data base. 
+ * @dev The itemsFactory contract create the basics NFT ERC721 and attribute them to the administrator balance.
+ * Two levels of items can be created. Level 1 represesent card of the item, level 2 is items in paper or stone of material
  */
-contract itemsFactory is ERC721, Ownable, interfaceMultiverse {
+contract itemsFactory is ERC721Enumerable, Ownable, interfaceMultiverseNFT{
   
-  address _owner;
-  
-  constructor () ERC721("PowItems","POW"){
+    ///@dev Contructor with the address of the interfaceMultiverse contract and the name and symbol of the NFT
+    constructor () ERC721("powUniq","POW"){
+    }
 
-    _owner = msg.sender;
-  }
+    ///@dev Those are the differents types of items which can be created 
+    uint _monument = 1;
+    uint _material = 2;
+    uint _card = 3;
 
-  string _monument = "Monument";
-  string _material = "Material";
-  string _card = "Card";
-  uint randNonce = 1;
+    /**
+     * @dev This is the stucture of an item. 
+     * @param Name is the name of the item 
+     * @param levelItem is the level of the item 1 or 2 at this stage
+     * @param continent is the continent where this items is located 
+     *  -here the list of continent by number: 1:North America, 2:South America, 3: Antarctique, 4:Asia, 5:Europe, 6:Africa ,
+     *  7:Oceania, 8:None(for material)
+     * @parma tokenIdId is the Id of the token, 
+     * @param compostion represesent the item on a number format: ex 123 456 789 where
+     *  -123 is the name of the monument (ex "tour eiffel") 
+     *  -456 is the material type (ex Gold)
+     *  -789 is the number of exemplaire of this item (ex with 3 exemplaire in the game this code will be 003)
+     * 
+     */
+    struct Item{
+        string name;
+        uint8 levelItem;
+        uint8 continent;
+        uint tokenId;
+        uint composition;
+        bool locked;
+        bool onSold;
+    }
 
- 
-  struct Item{
-  	string name;
-  	uint composition;
-    uint levelItem;
-    bool locked;
-  }
-
-  Item[] public items;
-  mapping (uint => uint) public exemplaire;
-
-  
-  function createItem(string memory _type,string memory _name) public onlyOwner {
+    //Array with all the items of the game
     
-    uint codeFirstPart;
-    uint codeSecondPart;
-    uint codeThirdPart;
-    uint codeComposition;
-    uint tokenId = items.length;
-    uint level;
-
-    if ((keccak256 (bytes(_type))) == (keccak256 (bytes(_monument)))) {
-
-      codeFirstPart =  getCodeMonument(_name);
-      codeSecondPart = getCodeMaterial ("paper");
-      level = 2;
-    } 
-
-    if ((keccak256 (bytes(_type))) == (keccak256 (bytes(_material)))){
-      codeSecondPart = getCodeMaterial(_name);
-      level = 2;
-    }
-
-    if ((keccak256 (bytes(_type))) == (keccak256 (bytes(_card)))){
-      codeFirstPart =  getCodeMonument(_name);
-      level = 1;
-    }
-    codeThirdPart = exemplaire[getCodeBaseComposition(codeFirstPart,codeSecondPart)]+1;
-    codeComposition = getCodeComposition(codeFirstPart,codeSecondPart,codeThirdPart);
-
-    exemplaire[getCodeBaseComposition(codeFirstPart,codeSecondPart)] = codeThirdPart;
+    Item[] public items;
     
-    items.push(Item(_name, codeComposition,level, false));
-    _safeMint(msg.sender, tokenId);
+    //Mapping counting the number of exemplaire of each item. The 6 first digits only are taken into account
+    mapping (uint => uint) public exemplaireNumbers;
     
-  }
-
-  function getReward () public returns(Item memory){
-
-    require (multiverseData[msg.sender].rewardLv1 != 0 || multiverseData[msg.sender].rewardLv2 != 0, "You have no rewards to get");
-
-    Item memory myItem;
-
-    if (multiverseData[msg.sender].rewardLv1 != 0){
-      for (uint i = multiverseData[msg.sender].rewardLv1; i > 0; i-- ){
-        uint idItem =  getAvailableItem(1); 
-         _transfer(_owner, msg.sender, idItem);
-      }
-      multiverseData[msg.sender].rewardLv1 = 0;
-    }
-
-    if (multiverseData[msg.sender].rewardLv2 != 0){
-      for (uint i = multiverseData[msg.sender].rewardLv2; i > 0; i-- ){
-        uint idItem =  getAvailableItem(2); 
-        _transfer(_owner, msg.sender, idItem);
-      }
-      multiverseData[msg.sender].rewardLv2 = 0;
-    }
-    return myItem;
-  }
-  
-
-  
-  function getAvailableItem(uint _level) public view returns(uint){
-
-    uint sizeArray;
-    uint Id;
-    randNonce ++;
-
-    for (uint k; k < items.length; k++){
-      if (ownerOf(k) == _owner ){
-        if (!items[k].locked && items[k].levelItem == _level){
-          sizeArray++;
+    ///@dev Function allowing to create items. Only the adminstrator can make one
+    function createItem(uint _type,string memory _name, uint8 _continent) public onlyOwner {
+    
+        uint codeFirstPart;
+        uint codeSecondPart;
+        uint codeThirdPart;
+        uint codeComposition;
+        uint tokenId = items.length;
+        uint8 level;
+        
+        if (_type == _monument) {
+          codeFirstPart =  getCodeMonument(_name);
+          codeSecondPart = getCodeMaterial ("paper");
+          level = 2;
+        } 
+        if (_type == _material){
+          codeSecondPart = getCodeMaterial(_name);
+          level = 2;
         }
-      }
-    }
-
-    uint[] memory availableItem = new uint[](sizeArray);
-   
-   for (uint k; k < items.length; k++){
-      if (ownerOf(k) == _owner ){
-        if (!items[k].locked && items[k].levelItem == _level){
-         availableItem[Id] = k;
-         Id++;
+        if (_type == _card){
+          codeFirstPart =  getCodeMonument(_name);
+          level = 1;
         }
-      }
+        
+        codeThirdPart = exemplaireNumbers[getCodeBaseComposition(codeFirstPart,codeSecondPart)]+1;
+        codeComposition = getCodeComposition(codeFirstPart,codeSecondPart,codeThirdPart);
+        exemplaireNumbers[getCodeBaseComposition(codeFirstPart,codeSecondPart)] = codeThirdPart;    
+        
+        _safeMint(msg.sender, tokenId);
+        items.push(Item(_name, level, _continent, tokenId, codeComposition, false, false));
+    }
+    
+    /**@dev Get the three first digit for the name of the monument. If we create an item, this number will be 000
+     * The front format the writing
+     */
+    function getCodeMonument(string memory _nameMonument) internal pure returns (uint){
+        return uint(keccak256(abi.encodePacked(_nameMonument))) % 1000;
+    }
+    
+    ///@dev Get the three digit of the material name
+    function getCodeMaterial(string memory _nameMaterial) internal pure returns (uint){
+        return (uint(keccak256(abi.encodePacked(_nameMaterial))) % 999)+1;
+    }
+    
+    ///@dev Get the six first digit of the item
+    function getCodeBaseComposition(uint _codeItem ,uint _codeMaterial) internal pure returns (uint){
+        return (_codeItem*1000)+_codeMaterial;
+    }
+    
+    ///@dev Get the entire composition of the item
+    function getCodeComposition( uint _codeItem, uint _codeMaterial, uint _codeExemplaire) internal pure returns(uint){
+        return (getCodeBaseComposition(_codeItem,_codeMaterial)*1000) + _codeExemplaire;
     }
 
-    if (availableItem.length == 0){
-      revert('There is not enough item availbale, please come back later');
-    } else {
-
-    uint randReward = uint(keccak256 (abi.encodePacked(block.timestamp, msg.sender, nonce))) % availableItem.length;
-
-    return availableItem[randReward];
-    }
-  }
-
-  function getCodeMonument(string memory _nameMonument) internal returns (uint){
-    return uint(keccak256(abi.encodePacked(_nameMonument))) % 1000;
-  }
-
-  function getCodeMaterial(string memory _nameMaterial) internal returns (uint){
-    return (uint(keccak256(abi.encodePacked(_nameMaterial))) % 999)+1;
-  }
-
-  function getCodeBaseComposition(uint _codeItem ,uint _codeMaterial) internal returns (uint){
-    return (_codeItem*1000)+_codeMaterial;
-  }
-
-  function getCodeComposition( uint _codeItem, uint _codeMaterial, uint _codeExemplaire) internal returns(uint){
-    return (getCodeBaseComposition(_codeItem,_codeMaterial)*1000) + _codeExemplaire;
-  }
-  
 }

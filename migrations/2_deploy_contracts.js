@@ -1,5 +1,5 @@
-var ItemsFactory = artifacts.require("./itemsFactory.sol");
+var MarketPlace = artifacts.require("./marketPlace.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(ItemsFactory);
+  deployer.deploy(MarketPlace);
 };
