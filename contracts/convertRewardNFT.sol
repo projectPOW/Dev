@@ -49,7 +49,7 @@ contract convertRewardNFT is itemsFactory {
      * First we create the size of an array, then we fill it with the eligible token 
      * and at the end we send the Id of the won token
      */
-    function getAvailableItem(uint8 _level) public view returns(uint){
+    function getAvailableItem(uint8 _level) private view returns(uint){
    
         uint sizeArray;
         uint Id;
