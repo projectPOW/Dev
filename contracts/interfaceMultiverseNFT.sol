@@ -50,6 +50,7 @@ contract interfaceMultiverseNFT{
 		require(!multiverseData[multiverseIds[_login]].isRegistered, "this player is already registered");
 
 		multiverseIds[_login] = _addressPlayer;
+		multiverseData[_addressPlayer].login = _login;
 		multiverseData[_addressPlayer].isRegistered = true; 
 		
 		emit NewPlayerRegistered(_addressPlayer,_login);
@@ -62,7 +63,8 @@ contract interfaceMultiverseNFT{
 	    require(msg.sender == _administrator, "you are not authorized to update a player");
 		require(multiverseData[multiverseIds[_login]].isRegistered == true, "please set first an Ethereum address for this player");
 		
-		multiverseData[multiverseIds[_login]] = Player(_login, _rewardLv1, _rewardLv2,true);
+		multiverseData[multiverseIds[_login]].rewardLv1 =  _rewardLv1;
+		multiverseData[multiverseIds[_login]].rewardLv2 =  _rewardLv2;
 		emit playerUpdated(_login);
 	}
 }

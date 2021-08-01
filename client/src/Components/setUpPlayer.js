@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import DoubleSearchBar from './doubleSearchBar';
 
 
-const SetUpPlayer = ({setFunction}) => {
+const SetUpPlayer = ({setMultiversePlayerNFT, setMultiversePlayerFONG, account }) => {
 
 	const [userAddress,setUserAddress] = useState(null);
 	const [userLogin, setUserLogin] = useState(null);
@@ -18,8 +18,11 @@ const SetUpPlayer = ({setFunction}) => {
 				state2 = {setUserLogin}
 				holder1 = "Eth address : 0x123..."
 				holder2 = "the great explorer.."
-				functionToCall = {setFunction}
-				textButton = "Set Player -Address"
+				functionToCall1 = {setMultiversePlayerNFT}
+				functionToCall2 = {setMultiversePlayerFONG}
+				textButton1 = "Set Player -Address NFT"
+				textButton2 = "Set Player -Address FONG"
+				account = {account}
 				/>
 			</div>
 		</div>

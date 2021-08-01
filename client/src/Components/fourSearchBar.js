@@ -1,15 +1,21 @@
 import React,{useState} from 'react';
+import DoubleButton from './doubleButton';
 
-const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3,holder4, functionToCall, textButton}) => {
+const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3,holder4, updateMultiversePlayerFONG, updateMultiversePlayerNFT, textButton1, textButton2}) => {
 
 	const [inputText1, setinputText1] = useState('');
 	const [inputText2, setinputText2] = useState('');
 	const [inputText3, setinputText3] = useState('');
 	const [inputText4, setinputText4] = useState('');
 
-	const onClick = (event) => {
+	const onClick1 = (event) => {
 			event.preventDefault();
-			functionToCall(inputText1,inputText2, inputText3, inputText4);
+			updateMultiversePlayerNFT(inputText1,inputText2, inputText3);
+		}
+
+	const onClick2 = (event) => {
+			event.preventDefault();
+			updateMultiversePlayerFONG(inputText1,inputText4);
 		}
 
 	return (
@@ -49,7 +55,12 @@ const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3
 						onChange = {(e) => setinputText4(e.target.value)}
 						placeholder = {holder4}
 					/>
-					<button className = "blue ui button" onClick = {onClick} style = {{ margin:'20px'}}> {textButton} </button>
+					<DoubleButton
+					function1= {onClick1}
+					function2= {onClick2}
+					textButton1 = {textButton1}
+					textButton2 = {textButton2}
+					/>
 				</div>
 			</form>
 		</div>

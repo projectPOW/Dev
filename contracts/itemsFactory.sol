@@ -57,6 +57,8 @@ contract itemsFactory is ERC721Enumerable, Ownable, interfaceMultiverseNFT{
     
     ///@dev Function allowing to create items. Only the adminstrator can make one
     function createItem(uint _type,string memory _name, uint8 _continent) public onlyOwner {
+      require (_type != 0, "please select a type of item");
+      require (_continent != 0, "please select a continent");
     
         uint codeFirstPart;
         uint codeSecondPart;

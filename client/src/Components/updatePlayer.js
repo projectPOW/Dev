@@ -1,8 +1,8 @@
 import React from "react";
 import FourSearchBar from "./fourSearchBar";
+  
 
-
-const UpdatePLayer = ({updateFunction}) => {
+const UpdatePLayer = ({updateMultiversePlayerNFT,updateMultiversePlayerFONG}) => {
 	
 return(
 	<div style = {{textAlign:'center', margin:'50px 0px 1000px 0px' , padding : "0px 0px 50px" }}>
@@ -16,8 +16,11 @@ return(
 			holder2 = "4"
 			holder3 = "1"
 			holder4 = "1300"
-			functionToCall = {updateFunction}
-			textButton = "Update data"
+			updateMultiversePlayerNFT = {updateMultiversePlayerNFT}
+			updateMultiversePlayerFONG = {updateMultiversePlayerFONG}
+			textButton1 = "Update data NFT"
+			textButton2= "Update data FONG"
+
 			/>
 		</div>
 	</div>

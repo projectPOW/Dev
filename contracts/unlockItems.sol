@@ -13,7 +13,7 @@ contract unlockItems is fusion {
  
     ///@dev Gives to the administrator a list of tokenId locked
     function getLockedItems() onlyOwner public view returns(uint[] memory) {
-        require (balanceOf(_administrator) != 0, "No more items in the database");
+       // require (balanceOf(_administrator) != 0, "No more items in the database");
         
         uint sizeLocked;  
         uint maxSize = balanceOf(_administrator);
@@ -37,9 +37,9 @@ contract unlockItems is fusion {
               count ++;
             }
           }
-        }else{
+        }/*else{
           revert("No lockedItems");
-        }
+        }*/
         return lockedItems;
       }
 
@@ -49,9 +49,9 @@ contract unlockItems is fusion {
         items[_Id].locked = false;
     }
     
-    ///@dev Administrator locks items
+    ///@dev Administrator locks items 
     function lock(uint _Id) public onlyOwner {
-        require (ownerOf(_Id) != msg.sender, "Error , token owned or non existent");
+        require (ownerOf(_Id) == msg.sender, "Error , token owned or non existent");
         items[_Id].locked = true;
    
     }

@@ -6,8 +6,7 @@ import UpdatePlayer from "./updatePlayer"
 
 
 
-
-const SetUpdatePlayer = ({functionToSet,functionToUpdate}) => {
+const SetUpdatePlayer = ({setMultiversePlayerNFT,setMultiversePlayerFONG,updateMultiversePlayerNFT,updateMultiversePlayerFONG}) => {
 
 	const [screenSet,setScreenSet] = useState(true);
 	const [screenUpdate,setScreenUpdate] = useState(false);
@@ -15,27 +14,23 @@ const SetUpdatePlayer = ({functionToSet,functionToUpdate}) => {
 	const view = () => {
 
 		if (screenSet) {
-			return <SetUpPlayer setFunction = {functionToSet}/>
+			return <SetUpPlayer setMultiversePlayerNFT = {setMultiversePlayerNFT} setMultiversePlayerFONG= {setMultiversePlayerFONG}/>
 		}else{
-			return <UpdatePlayer updateFunction = {functionToUpdate}/>
+			return <UpdatePlayer updateMultiversePlayerNFT = {updateMultiversePlayerNFT} updateMultiversePlayerFONG = {updateMultiversePlayerFONG}/>
 		}
 	}
-	
-
 
 	return(
 		<div >
 			<h1 className = "ui header" style = {{textAlign:'center', margin:'20px' }} > Set / Update Player </h1>
-			<div style = {{ margin:'50px 500px ' }}>
+			<div className="ui container"> 
 				<div>
 					<TwoHeaders
 					viewSet = {setScreenSet}
 					viewUpdate = {setScreenUpdate}
 					/>
+					{view()}
 				</div>	
-				<div >
-				 {view()}
-				</div>
 			</div>
 			
  		</div>

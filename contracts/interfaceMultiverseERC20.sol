@@ -50,6 +50,7 @@ contract interfaceMultiverseERC20{
 		require(!multiverseData[multiverseIds[_login]].isRegistered, "this player is already registered");
 
 		multiverseIds[_login] = _addressPlayer;
+		multiverseData[_addressPlayer].login = _login; 
 		multiverseData[_addressPlayer].isRegistered = true; 
 		
 		emit NewPlayerRegistered(_addressPlayer,_login);
@@ -62,7 +63,7 @@ contract interfaceMultiverseERC20{
 	    require(msg.sender == _administrator, "you are not authorized to update a player");
 		require(multiverseData[multiverseIds[_login]].isRegistered == true, "please set first an Ethereum address for this player");
 		
-		multiverseData[multiverseIds[_login]] = Player(_login, multiverseData[multiverseIds[_login]].lastLevelErc20Reward, _XP,true);
+		multiverseData[multiverseIds[_login]].XP = _XP;
 		emit playerUpdated(_login);
 	}
 }

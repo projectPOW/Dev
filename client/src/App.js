@@ -4,6 +4,17 @@ import POW_FONG from "./contracts/POWToken.json";
 import getWeb3 from "./getWeb3";
 import SetUpdatePlayer from "./Components/setUpdatePlayer";
 import Homepage from "./Components/homepage";
+import Fusion from "./Components/fusion";
+import Reward from "./Components/reward";
+import Tournament from "./Components/tournament";
+import Route from "./Components/route";
+import MarketPlace from "./Components/marketPlace";
+import Admin from "./Components/admin";
+import Factory from "./Components/factory";
+import Unlock from "./Components/unlock";
+import LockItemsScreen from "./Components/lockItemsScreen"
+import SuccessMessage from './Components/successMessage'
+import SetLevelReward from './Components/setLevelReward'
 
 
 const App = () => {
@@ -12,10 +23,23 @@ const App = () => {
   const [accounts,setAccounts]=useState(null);
   const [contract,setContract]=useState(null);
   const [contract2,setContract2]=useState(null);
-  const [currentState,setCurrentState] = useState("We are in voters registration session");
+  const [rewardNFT,setRewardNFT] = useState('');
+  const [rewardFONG,setRewardFONG] = useState(false);
   const [proposalTab,setProposalTab] = useState ([]);
   const [voteVoter,setVoteVoter] = useState (null);
   const [winner,setWinner] = useState ([]);
+  const [dataNftPlayer, setDataNftPlayer] = useState (0);
+  const [dataFongPlayer, setDataFongPlayer] = useState (0);
+  const [objectToCreate, setObjectToCreate] = useState(0);
+  const [continentWhereToFind,setContinentWhereToFind] = useState(0);
+  const [lockedItems, setLockedItems] = useState([]);
+  const [rewardEarned,setRewardEarned] = useState([]);
+  const [unlockedItemsTab, setUnlockedItemsTab] = useState ([]); 
+  const [lockedItemsTab, setLockedItemsTab] = useState([]);
+  const [eventWithdrawCrypto, setEventWithdrawCrypto] = useState(false);
+  const [eventNewMergedItem, setEventNewMergedItem] = useState([])
+  const [idMergedItem,setIdMergedItem] = useState (0);
+
 
   useEffect ( () => {
 
@@ -34,7 +58,7 @@ const App = () => {
 
          const instance2 = new web3.eth.Contract(
           POW_FONG.abi,
-          deployedNetwork && deployedNetwork.address,
+          deployedNetwork2 && deployedNetwork2.address,
           );
 
          /***********Event listener***********/
@@ -49,10 +73,24 @@ const App = () => {
 
           instance.events.rewardWithdrawn()
           .on("data", (event) => {
+
+          setRewardEarned((rewardEarned) =>{ return [...rewardEarned, event.returnValues['tokenName']];});
+          console.log("call");
+
+        }).on("error", console.error);
+
+           instance2.events.rewardWithdrawn()
+          .on("data", (event) => {
+
+            setEventWithdrawCrypto(true);
+
         }).on("error", console.error);
 
           instance.events.fusionnedItemCreate()
           .on("data", (event) => {
+
+            setIdMergedItem(event.returnValues['tokenId']);
+
         }).on("error", console.error);
 
           instance.events.lockItem()
@@ -102,32 +140,86 @@ const App = () => {
       }
     }
       initWeb3();
+
+      return () =>{
+        setRewardNFT('');
+      }
       
   },[accounts]);
 
-  /***********Contract call***********/
-  
-  const setMultiversePlayer = async(address,login) => {
+  /***********Helper function***********/
+  const UpdateETHAccount = async() =>{
     try{
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
-      await contract.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
-      await contract2.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
     }catch (error){
         console.log(error);
         alert('Error: check the address');
       }
   }
 
-  const updateMultiversePlayer = async(login,caseLv1,caseLv2,XP) => {
+  const getPlayerDataNFT = async() => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const data = await contract.methods.multiverseData(accounts[0]).call();
+      setDataNftPlayer(data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const getPlayerDataFONG = async() => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const data = await contract2.methods.multiverseData(accounts[0]).call();
+      setDataFongPlayer(data);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+
+
+  /***********Contract call***********/
+  
+  const setMultiversePlayerNFT = async(address,login) => {
+    try{
+      UpdateETHAccount()
+      await contract.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
+    }catch (error){
+        console.log(error);
+      }
+  }
+
+  const setMultiversePlayerFONG = async(address,login) => {
+    try{
+      UpdateETHAccount()
+      await contract2.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
+    }catch (error){
+        console.log(error);
+      }
+  }
+
+  const updateMultiversePlayerNFT = async(login,caseLv1,caseLv2) => {
+    
     try{
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
       await contract.methods.updateMultiversePlayer(login,caseLv1,caseLv2).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  const updateMultiversePlayerFONG = async(login,XP) => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
       await contract2.methods.updateMultiversePlayer(login,XP).send({from: accounts[0]});
     }catch(error){
       console.log(error);
-      alert('Error transaction');
     }
   }
 
@@ -138,11 +230,10 @@ const App = () => {
       await contract.methods.createItem(type, name, continent).send({from: accounts[0]});
     }catch(error){
       console.log(error);
-      alert('Error transaction');
     }
   }
 
-  const getReward = async() => {
+  const getRewardNFT = async() => {
     try{
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
@@ -177,12 +268,14 @@ const App = () => {
 
   const getLockedItems = async() => {
     try{
+      const TablockItem = []
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
-      await contract.methods.getLockedItems().call({from: accounts[0]});
+      const lockedTab = await contract.methods.getLockedItems().call({from: accounts[0]});
+      getDataItemLocked(lockedTab);
     }catch(error){
       console.log(error);
-      alert('Error transaction');
+      alert(error.message.reason);
     }
   }
 
@@ -218,6 +311,17 @@ const App = () => {
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
       await contract.methods.getItemsOfPlayer(address).call();
+  }
+
+  const getMyItems = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
+      getDataItemUnlocked (returnTab);
+      }catch(error){
+      console.log(error);
+    }
   }
 
   const setMarketOrder = async (amount, tokenId) => {
@@ -308,20 +412,183 @@ const App = () => {
     }
   }
 
+  const getDataItemUnlocked = async(TabTokenId) => {
+    const tabInt = [];
+    const tabData = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      tabInt[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+      if (!tabInt[i].locked){
+        tabData[i] = tabInt[i]
+      }
+    } 
+    setUnlockedItemsTab(tabData);
+    console.log(unlockedItemsTab);
+  }
+
+  const getDataItemMerged = async() => {
+    
+    const tabData = await contract.methods.items(idMergedItem).call({from: accounts[0]});
+    setEventNewMergedItem(tabData); 
+    console.log(tabData);
+    console.log(eventNewMergedItem);   
+  }
+
+ const getDataItemLocked = async(TabTokenId) => {
+    const tabData = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      tabData[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+     
+    } 
+    setLockedItemsTab(tabData);
+    console.log(lockedItemsTab);
+  }
 
 /************************************/
 
+/***********Table options***********/ 
+
+  const type = [
+      {
+        label: "Monument",
+        value: "1",
+      },
+      {
+        label: "Material",
+        value: "2",
+      },
+      {
+        label: "Card",
+        value: "3",
+      },
+    ];
+
+    const continent = [
+      {
+        label: "North America",
+        value: "1",
+      },
+      {
+        label: "South America",
+        value: "2",
+      },
+      {
+        label: "Antartique",
+        value: "3",
+      },
+      {
+        label: "Asia",
+        value: "4",
+      },
+      {
+        label: "Europe",
+        value: "5",
+      },
+      {
+        label: "Africa",
+        value: "6",
+      },
+      {
+        label: "Oceania",
+        value: "7",
+      },
+      {
+        label: "All over the world",
+        value: "8",
+      },
+    ];
+
+    const entryTab = [1,2,3];
+
+/************************************/
+
+
   return (
     <div>
-      <div>
-        <SetUpdatePlayer 
-        functionToSet = {setMultiversePlayer}
-        functionToUpdate = {updateMultiversePlayer} 
-        />
-      </div>
-      <div>
+      <Route path = "/" >
         <Homepage/>
-      </div>
+      </Route>
+      <Route path = "/reward" >
+        <Reward 
+        getPlayerDataNFT = {getPlayerDataNFT} 
+        getPlayerDataFONG = {getPlayerDataFONG} 
+        getRewardFONG = {getRewardFONG}
+        getRewardNFT = {getRewardNFT}
+        dataNftPlayer = {dataNftPlayer}
+        dataFongPlayer = {dataFongPlayer}
+        rewardEarned = {rewardEarned}
+        rewardFONG = {rewardFONG}
+        setRewardEarned = {setRewardEarned}
+        setEventWithdrawCrypto = {setEventWithdrawCrypto}
+        eventWithdrawCrypto = {eventWithdrawCrypto}
+        />
+      </Route>
+      <Route path = "/fusion" >
+        <Fusion
+        getMyItems = {getMyItems}
+        unlockedItemsTab = {unlockedItemsTab}
+        fusionItem = {fusionItem}
+        eventNewMergedItem = {eventNewMergedItem}
+        setEventNewMergedItem = {setEventNewMergedItem}
+        getDataItemMerged = {getDataItemMerged}
+        idMergedItem = {idMergedItem}
+        setIdMergedItem = {setIdMergedItem}
+        />
+      </Route>
+      <Route path = "/marketplace" >
+        <div> test</div>
+      </Route> 
+      <Route path = "/tournament" >
+        Nothing
+      </Route> 
+      <Route path = "/setUpdate" >
+        <SetUpdatePlayer 
+        setMultiversePlayerNFT = {setMultiversePlayerNFT}
+        setMultiversePlayerFONG = {setMultiversePlayerFONG}
+        updateMultiversePlayerNFT = {updateMultiversePlayerNFT} 
+        updateMultiversePlayerFONG = {updateMultiversePlayerFONG}
+        account = {accounts} 
+        />
+      </Route> 
+      <Route path = "/admin" >
+        <Admin/>
+      </Route> 
+      <Route path = "/admin/factory" >
+       <Factory
+        setObjectToCreate = {setObjectToCreate}
+        objectToCreate = {objectToCreate}
+        createItem = {createItem}
+        continentWhereToFind={continentWhereToFind}
+        setContinentWhereToFind = {setContinentWhereToFind}
+        continent = {continent}
+        type = {type}
+        />
+      </Route>     
+      <Route path = "/admin/unlock" >
+        <Unlock
+          entryTab = {lockedItemsTab}
+          getLockedItems = {getLockedItems}
+          unlock = {unlock}
+          />
+      </Route>    
+      <Route path = "/admin/lock" >
+        <LockItemsScreen
+        getMyItems = {getMyItems}
+        unlockedItemsTab = {unlockedItemsTab}
+        lock={lock}
+        />
+      </Route> 
+      <Route path = "/admin/rewardLevel" >
+        <SetLevelReward
+        setReward  = {setReward}
+        />
+      </Route>
+      <Route path = "/success" >
+        <SuccessMessage/>
+      </Route>               
     </div>
   );
 }

@@ -1,13 +1,19 @@
 import React,{useState} from 'react';
+import DoubleButton from './doubleButton';
 
-const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functionToCall, textButton}) => {
+const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functionToCall1, functionToCall2, textButton1, textButton2, account}) => {
 
 	const [inputText1, setinputText1] = useState('');
 	const [inputText2, setinputText2] = useState('');
 
-	const onSubmit = (event) => {
+	const onClick1 = (event) => {
 			event.preventDefault();
-			functionToCall(inputText1,inputText2);
+			functionToCall1(inputText1,inputText2);
+		}
+
+	const onClick2 = (event) => {
+			event.preventDefault();
+			functionToCall2(inputText1,inputText2);
 		}
 
 	return (
@@ -31,7 +37,12 @@ const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functi
 						onChange = {(e) => setinputText2(e.target.value)}
 						placeholder = {holder2}
 					/>
-					<button className = "blue ui button" onClick = {onSubmit} style = {{ margin:'20px'}}> {textButton} </button>
+					<DoubleButton
+					function1= {onClick1}
+					function2= {onClick2}
+					textButton1 = {textButton1}
+					textButton2 = {textButton2}
+					/>
 				</div>
 			</form>
 		</div>
