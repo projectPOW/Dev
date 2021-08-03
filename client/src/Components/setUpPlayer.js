@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import DoubleSearchBar from './doubleSearchBar';
+import BackButton from "./backButton";
 
 
 const SetUpPlayer = ({setMultiversePlayerNFT, setMultiversePlayerFONG, account }) => {
@@ -23,6 +24,10 @@ const SetUpPlayer = ({setMultiversePlayerNFT, setMultiversePlayerFONG, account }
 				textButton1 = "Set Player -Address NFT"
 				textButton2 = "Set Player -Address FONG"
 				account = {account}
+				/>
+				<BackButton
+				textBack = "Back"
+				backPath = "/admin"
 				/>
 			</div>
 		</div>

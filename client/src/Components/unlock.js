@@ -32,7 +32,7 @@ const Unlock = ({entryTab, getLockedItems, unlock}) => {
 
 
 	return (
-		<div>
+		<div className="ui raised very padded text container segment" style = {{textAlign:'center', marginTop:'100px' }}> 
 			<div>
 				<div className="ui inverted top attached tabular menu">
 				  <Link href = "/admin/unlock" className={`item ${activeUnlock}`}>

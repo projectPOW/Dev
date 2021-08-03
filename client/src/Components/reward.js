@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Message from "./message";
 import DoubleButton from './doubleButton';
-import BackButton from './backButton';
+import BackButtonCleaning from './backButtonCleaning';
 
 
 const Reward = ({getPlayerDataNFT, getPlayerDataFONG ,getRewardNFT,getRewardFONG, dataFongPlayer,dataNftPlayer, rewardEarned, rewardFONG,setRewardEarned,setEventWithdrawCrypto,eventWithdrawCrypto}) => {
@@ -34,10 +34,10 @@ const Reward = ({getPlayerDataNFT, getPlayerDataFONG ,getRewardNFT,getRewardFONG
 
 
 	return (
-		<div className="ui raised very padded text container segment">
-			<div>
-				<h1 className = "ui header" style = {{textAlign:'center', margin:'20px' }} > Reward </h1>
-				<div className = "search-bar ui segment">
+		<div>
+			<div className="ui raised very padded text container segment" style = {{ marginTop:'100px' }}>
+				<h1 className = "ui header" style = {{textAlign:'center', marginBottom:'50px' }} > Reward </h1>
+				<div className = "search-bar">
 					<Message
 					dataNftPlayer = {dataNftPlayer}
 					dataFongPlayer = {dataFongPlayer}
@@ -56,10 +56,11 @@ const Reward = ({getPlayerDataNFT, getPlayerDataFONG ,getRewardNFT,getRewardFONG
 					textButton2 = "Collect my ERC20"
 					/>
 				</div>
-					<div>
-						<BackButton
+					<div style = {{textAlign :"center"}}>
+						<BackButtonCleaning
 						textBack = "Back To menu"
 						backPath = "/"
+						cleanFunction = {cleanListReward}
 						/>
 					</div>
 				</div>				

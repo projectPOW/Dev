@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import SetUpPlayer from './setUpPlayer';
-import Route from "./route"
-import TwoHeaders from "./twoHeaders"
-import UpdatePlayer from "./updatePlayer"
+import Route from "./route";
+import TwoHeaders from "./twoHeaders";
+import UpdatePlayer from "./updatePlayer";
 
 
 
@@ -21,18 +21,21 @@ const SetUpdatePlayer = ({setMultiversePlayerNFT,setMultiversePlayerFONG,updateM
 	}
 
 	return(
-		<div >
-			<h1 className = "ui header" style = {{textAlign:'center', margin:'20px' }} > Set / Update Player </h1>
+		<div>
+			<div style = {{textAlign:'center', paddingTop:'100px' }}>
 			<div className="ui container"> 
-				<div>
-					<TwoHeaders
-					viewSet = {setScreenSet}
-					viewUpdate = {setScreenUpdate}
-					/>
-					{view()}
+				<h1 className = "ui header" style = {{textAlign:'center', margin:'20px' }} > Set / Update Player </h1>
+				<div> 
+					<div>
+						<TwoHeaders
+						viewSet = {setScreenSet}
+						viewUpdate = {setScreenUpdate}
+						/>
+						{view()}
+					</div>
 				</div>	
 			</div>
-			
+			</div>		
  		</div>
 		);
 }

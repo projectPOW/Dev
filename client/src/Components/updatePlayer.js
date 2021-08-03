@@ -1,5 +1,6 @@
 import React from "react";
 import FourSearchBar from "./fourSearchBar";
+import BackButton from "./backButton";
   
 
 const UpdatePLayer = ({updateMultiversePlayerNFT,updateMultiversePlayerFONG}) => {
@@ -20,7 +21,10 @@ return(
 			updateMultiversePlayerFONG = {updateMultiversePlayerFONG}
 			textButton1 = "Update data NFT"
 			textButton2= "Update data FONG"
-
+			/>
+			<BackButton
+			textBack = "Back"
+			backPath = "/admin"
 			/>
 		</div>
 	</div>

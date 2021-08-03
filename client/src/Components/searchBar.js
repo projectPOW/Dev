@@ -11,7 +11,7 @@ const SearchBar = ({textButton,textToEnter,holder, functionToCall}) => {
 
 	return (
 
-		<div className = "search-bar ui segment">
+		<div className = "search-bar">
 			<form className = "ui form">
 				<div className = "field">
 					<label>{textToEnter}</label>

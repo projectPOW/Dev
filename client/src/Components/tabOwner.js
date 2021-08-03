@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const TabUnlockedItems = ({entryTab}) => {
+const TabOwner = ({entryTab}) => {
 
 	const tabRender = entryTab.map( (Tab, index) => {
 
@@ -10,6 +10,7 @@ const TabUnlockedItems = ({entryTab}) => {
 			<tr key={Tab.tokenId}>
 				<td> {Tab.tokenId} </td>
 				<td>{Tab.name}</td>
+				<td>{Tab.continent}</td>
 				<td>{Tab.composition}</td>
 				<td>{Tab.levelItem}</td>
 			</tr>
@@ -23,8 +24,10 @@ return (
 				<thead>
 					<tr><th>Id Token</th>
 					<th>Name</th>
+					<th>Continent</th>
 					<th>Composition</th>
-					<th>Level Item</th>
+					<th>Level item</th>
+
 				</tr></thead>
 					<tbody>
 					{tabRender}
@@ -36,4 +39,4 @@ return (
 	)
 }
 
-export default TabUnlockedItems;
+export default TabOwner;

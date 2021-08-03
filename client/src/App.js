@@ -12,9 +12,16 @@ import MarketPlace from "./Components/marketPlace";
 import Admin from "./Components/admin";
 import Factory from "./Components/factory";
 import Unlock from "./Components/unlock";
-import LockItemsScreen from "./Components/lockItemsScreen"
-import SuccessMessage from './Components/successMessage'
-import SetLevelReward from './Components/setLevelReward'
+import LockItemsScreen from "./Components/lockItemsScreen";
+import SuccessMessage from './Components/successMessage';
+import SetLevelReward from './Components/setLevelReward';
+import ViewRank from './Components/viewRank';
+import ViewOwner from './Components/viewOwner';
+import ManageOrder from './Components/manageOrder';
+import BuyOrder from './Components/buyOrder';
+import DeleteOrder from "./Components/deleteOrder";
+import ManageOrderOpen from "./Components/manageOrderOpen";
+import BuyOrderWhitelisted from './Components/buyOrderWhitelisted';
 
 
 const App = () => {
@@ -39,10 +46,23 @@ const App = () => {
   const [eventWithdrawCrypto, setEventWithdrawCrypto] = useState(false);
   const [eventNewMergedItem, setEventNewMergedItem] = useState([])
   const [idMergedItem,setIdMergedItem] = useState (0);
+  const [tabRank, setTabRank] = useState([]);
+  const [tabItemOwner, setTabItemOwner] = useState([]);
+  const [tabOrder, setTabOrder] = useState([]);
+  const [newOrderId, setNewOrderId] = useState(null);
+  const [dataMyItemInOrder, setDataMyItemInOrder] = useState([]);
+  const [dataMyItemInCurrentOrder, setDataMyItemInCurrentOrder] = useState([]);
+  const [admin,setAdmin] = useState(null);
+  const [currentMarketOrders, setCurrentMarketOrders] = useState([]);
+  const [newOrderIdWhitelisted, setNewOrderIdWhitelisted] = useState(null);
+  const [currentWhitelistedMarketOrders, setCurrentWhitelistedMarketOrders] = useState([]);
+  const [tabOrderWhitelisted, setTabOrderWhitelisted] = useState([]);
+
 
 
   useEffect ( () => {
 
+   
     const initWeb3 = async () =>{
       try{
         const web3 = await getWeb3();
@@ -60,6 +80,8 @@ const App = () => {
           POW_FONG.abi,
           deployedNetwork2 && deployedNetwork2.address,
           );
+
+         const owner = await instance.methods.owner().call({from: accounts[0]});
 
          /***********Event listener***********/
 
@@ -90,6 +112,7 @@ const App = () => {
           .on("data", (event) => {
 
             setIdMergedItem(event.returnValues['tokenId']);
+           
 
         }).on("error", console.error);
 
@@ -97,11 +120,70 @@ const App = () => {
           .on("data", (event) => {
         }).on("error", console.error);
 
-          instance.events.NewMarketOrder()
+          instance.events.newMarketOrder()
+          .on("data", (event) => {
+            setNewOrderId(event.returnValues);
+            console.log("click");
+            
+
+        }).on("error", console.error);
+
+          let intTab11 = [];
+
+          instance.getPastEvents("newMarketOrder", { fromBlock: 0, toBlock: "latest" },
+           function(error, event){ 
+
+            for (let i= 0 ; i<event.length;i++){
+
+              intTab11.push(event[i].returnValues.tokenId);
+
+            }
+
+            const cleanTab = [...new Set(intTab11)];
+            setTabOrder(cleanTab);
+            })
+          .then(function(event) {
+          
+            console.log(tabOrder);
+            //test(cleanTab);
+            // `events` est un tableau d'objets `event` pour lequel nous pouvons itérer, comme nous l'avons fait ci-dessus
+            // Ce code donnera une liste de tous les zombies créés
+          });
+
+          instance.events.newMarketOrderWithlisted()
+          .on("data", (event) => {
+
+            setNewOrderIdWhitelisted(event.returnValues);
+
+        }).on("error", console.error);
+
+          let intTab22 = [];
+
+          instance.getPastEvents("newMarketOrder", { fromBlock: 0, toBlock: "latest" },
+           function(error, event){ 
+
+            for (let i= 0 ; i<event.length;i++){
+
+              intTab22.push(event[i].returnValues.tokenId);
+
+            }
+
+            const cleanTab = [...new Set(intTab22)];
+            setTabOrderWhitelisted(cleanTab);
+            })
+          .then(function(event) {
+          
+            console.log(tabOrderWhitelisted);
+            //test(cleanTab);
+            // `events` est un tableau d'objets `event` pour lequel nous pouvons itérer, comme nous l'avons fait ci-dessus
+            // Ce code donnera une liste de tous les zombies créés
+          });
+
+          instance.events.soldMade()
           .on("data", (event) => {
         }).on("error", console.error);
 
-          instance.events.soldMade()
+          instance.events.soldMadeWhitelisted()
           .on("data", (event) => {
         }).on("error", console.error);
 
@@ -127,6 +209,7 @@ const App = () => {
 
       /************************************/
 
+        setAdmin(owner);
         setContract2(instance2);
         setContract(instance);
         setWeb3(web3);
@@ -145,7 +228,7 @@ const App = () => {
         setRewardNFT('');
       }
       
-  },[accounts]);
+  },[accounts,newOrderId,newOrderIdWhitelisted]);
 
   /***********Helper function***********/
   const UpdateETHAccount = async() =>{
@@ -304,13 +387,15 @@ const App = () => {
   const getRankByContinent = async (continentNum) => {
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
-      await contract.methods.getRankByContinent(continentNum).call();
+      const tabInt = await contract.methods.getRankByContinent(continentNum).call();
+      makeRank(tabInt);
   }
 
   const getItemsOfPlayer = async (address) => {
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
-      await contract.methods.getItemsOfPlayer(address).call();
+     const returnTab = await contract.methods.getItemsOfPlayer(address).call();
+     getDataItemUnlockedOwner(returnTab);
   }
 
   const getMyItems = async () => {
@@ -318,7 +403,29 @@ const App = () => {
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
       const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
-      getDataItemUnlocked (returnTab);
+      getDataItemUnlocked(returnTab);
+      }catch(error){
+      console.log(error);
+    }
+  }
+
+  const getMyItemsInOrder = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
+      getDataItemInOrder(returnTab);
+      }catch(error){
+      console.log(error);
+    }
+  }
+
+  const getMyItemsInCurrentOrder = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
+      getDataItemInCurrentOrder(returnTab);
       }catch(error){
       console.log(error);
     }
@@ -331,7 +438,6 @@ const App = () => {
       await contract.methods.setMarketOrder(amount,tokenId).send({from: accounts[0]});
     }catch(error){
       console.log(error);
-      alert('Error transaction');
     }
   }
 
@@ -339,7 +445,7 @@ const App = () => {
      try{
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
-      await contract.methods.setMarketOrder(amount, tokenId, address).send({from: accounts[0]});
+      await contract.methods.setMarketOrderWhitelisted(amount, tokenId, address).send({from: accounts[0]});
     }catch(error){
       console.log(error);
       alert('Error transaction');
@@ -347,25 +453,26 @@ const App = () => {
   }
 
   const getOrder = async (orderId) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.getOrder(orderId).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
+
+    const accounts = await web3.eth.getAccounts();
+    setAccounts(accounts);
+     
+   let check = await contract.methods.marketOrders(orderId).call({from: accounts[0]});
+
+   var etherAmount = check.priceRequested;
+   web3.eth.sendTransaction({from:accounts[0],data:web3.eth.abi.encodeFunctionSignature('getOrder(orderId)'), value:web3.utils.toWei(etherAmount ,"ether" )}) 
+ 
   }
 
   const getWhitelistedOrder = async (orderId) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.getWhitelistedOrder(orderId).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
+
+    const accounts = await web3.eth.getAccounts();
+    setAccounts(accounts);
+
+   let check2 = await contract.methods.orderWithWithelist(orderId).call({from: accounts[0]});
+    
+   var etherAmount = check2.priceRequested;
+   web3.eth.sendTransaction({from:accounts[0],data:web3.eth.abi.encodeFunctionSignature('getWhitelistedOrder(orderId)'), value:web3.utils.toWei(etherAmount ,"ether" )}) 
   }
 
   const cancelOrder = async (orderId) => {
@@ -427,6 +534,19 @@ const App = () => {
     console.log(unlockedItemsTab);
   }
 
+  const getDataItemUnlockedOwner = async(TabTokenId) => {
+    const tabData = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      tabData[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+      
+    } 
+    setTabItemOwner(tabData);
+    
+    console.log(tabItemOwner);
+  }
+
   const getDataItemMerged = async() => {
     
     const tabData = await contract.methods.items(idMergedItem).call({from: accounts[0]});
@@ -446,6 +566,109 @@ const App = () => {
     setLockedItemsTab(tabData);
     console.log(lockedItemsTab);
   }
+
+  
+
+  const  makeRank = (arr) => {
+
+      var result2 = [];
+
+      var counts = {};
+      arr.forEach(function(num) {
+          if (!(num in counts)) {
+              counts[num] = 0;
+          }
+          counts[num]++;
+      });
+      let properties = Object.keys(counts).reverse();
+      console.log(typeof(properties));
+
+      var result = Object.keys(properties).map((key) => `${properties[key]}`);
+
+      for (var j = 0; j < result.length; j++){
+
+        result2.push(result[j]);
+
+      }
+
+      setTabRank(result2);
+      console.log(result);
+  }
+
+  const updateTabOrder = async() => {
+
+    let tabInte = [];
+    if (tabOrder != []){
+      for (let k = 0; k < tabOrder.length; k++ ){
+
+        let check = await contract.methods.marketOrders(k).call({from: accounts[0]});
+        let check2 = await contract.methods.orderWithWithelist(k).call({from: accounts[0]});
+
+        if(check.active && !check2.active ){
+          tabInte.push(check);
+        }
+      }
+    }
+
+    setCurrentMarketOrders(tabInte);
+  }
+
+  const updateTabOrderWhitelisted = async() => {
+
+    let tabInte = [];
+    if (tabOrderWhitelisted != []){
+      for (let k = 0; k < tabOrderWhitelisted.length; k++ ){
+
+        let check = await contract.methods.marketOrders(k).call({from: accounts[0]});
+        let check2 = await contract.methods.orderWithWithelist(k).call({from: accounts[0]});
+
+        if(!check.active&&check2.active){
+          tabInte.push(check2);
+        }
+      }
+    }
+    setCurrentWhitelistedMarketOrders(tabInte);
+  }
+
+
+
+  const test = (tab) =>{
+
+    console.log(tab);
+  }
+
+  const getDataItemInOrder = async(TabTokenId) => {
+    const tabData = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      tabData[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+      
+    } 
+    setDataMyItemInOrder(tabData);
+    
+    console.log(dataMyItemInOrder);
+  }
+
+  const getDataItemInCurrentOrder = async(TabTokenId) => {
+    const tabData = [];
+    const tabInt = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      tabInt[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+        if(tabInt[i].onSold){
+          tabData.push(tabInt[i]);
+        }
+      
+    } 
+    setDataMyItemInCurrentOrder(tabData);
+    
+    console.log(dataMyItemInCurrentOrder);
+  }
+
+
+
 
 /************************************/
 
@@ -505,12 +728,15 @@ const App = () => {
 
 /************************************/
 
-
+  
   return (
     <div>
       <Route path = "/" >
-        <Homepage/>
-      </Route>
+        <Homepage
+        admin = {admin}
+        accounts = {accounts}
+        />
+        </Route>
       <Route path = "/reward" >
         <Reward 
         getPlayerDataNFT = {getPlayerDataNFT} 
@@ -539,12 +765,12 @@ const App = () => {
         />
       </Route>
       <Route path = "/marketplace" >
-        <div> test</div>
+        <MarketPlace/>
       </Route> 
       <Route path = "/tournament" >
         Nothing
       </Route> 
-      <Route path = "/setUpdate" >
+      <Route path = "/admin/setUpdate" >
         <SetUpdatePlayer 
         setMultiversePlayerNFT = {setMultiversePlayerNFT}
         setMultiversePlayerFONG = {setMultiversePlayerFONG}
@@ -586,9 +812,62 @@ const App = () => {
         setReward  = {setReward}
         />
       </Route>
-      <Route path = "/success" >
-        <SuccessMessage/>
-      </Route>               
+      <Route path = "/marketplace/viewRank" >
+        <ViewRank
+        list = {continent}
+        getRankByContinent = {getRankByContinent }
+        tabRank = {tabRank}
+
+        />
+      </Route> 
+      <Route path = "/marketplace/viewOwner" >
+        <ViewOwner
+        setTabItemOwner = {setTabItemOwner}
+        tabItemOwner = {tabItemOwner}
+        getItemsOfPlayer = {getItemsOfPlayer}
+
+        />
+      </Route> 
+      <Route path = "/marketplace/manageOrder" >
+        <ManageOrder
+        createMarketOrder = {setMarketOrder} 
+        getMyItemsInOrder = {getMyItemsInOrder}
+        setDataMyItemInOrder = {setDataMyItemInOrder}
+        dataMyItemInOrder = {dataMyItemInOrder}
+        />
+      </Route> 
+      <Route path = "/marketplace/manageOrderWhitelisted" >
+        <ManageOrderOpen
+        createMarketOrderWhitelisted = {setMarketOrderWhitelisted} 
+        getMyItemsInOrder = {getMyItemsInOrder}
+        setDataMyItemInOrder = {setDataMyItemInOrder}
+        dataMyItemInOrder = {dataMyItemInOrder}
+        />
+      </Route>  
+      <Route path = "/marketplace/buyOrder" >
+        <BuyOrder
+        getOrder = {getOrder}
+        setCurrentMarketOrders = {setCurrentMarketOrders}
+        currentMarketOrders = {currentMarketOrders}
+        updateTabOrder = {updateTabOrder}
+        />
+      </Route>
+      <Route path = "/marketplace/buyOrderWhitelisted" >
+        <BuyOrderWhitelisted
+        getWhitelistedOrder = {getWhitelistedOrder}
+        setCurrentWhitelistedMarketOrders = {setCurrentWhitelistedMarketOrders}
+        currentWhitelistedMarketOrders = {currentWhitelistedMarketOrders}
+        updateTabOrderWhitelisted = {updateTabOrderWhitelisted}
+        />
+      </Route>
+      <Route path = "/marketplace/deleteOrder" >
+        <DeleteOrder
+        cancelOrder = {cancelOrder}
+        getMyItemsInCurrentOrder = {getMyItemsInCurrentOrder}
+        setDataMyItemInCurrentOrder = {setDataMyItemInCurrentOrder}
+        dataMyItemInCurrentOrder = {dataMyItemInCurrentOrder}
+        />
+      </Route>            
     </div>
   );
 }

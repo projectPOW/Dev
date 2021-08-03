@@ -1,13 +1,36 @@
 import React from 'react';
 import Link from "./link";
 
-const Homepage = () => {
+const Homepage = ({accounts, admin}) => {
+
+	const superUserEnable = admin == accounts ? "item" : " disabled item"; 
+  const superUserEnable2 = admin == accounts ?   "admin" : '/'; 
+
+  const SuperUser = () => {
+
+  	if (admin == accounts){
+
+  		return(
+  			<Link href = "/admin"  className={`${superUserEnable}`}>
+			    Admin
+		  </Link>
+
+  			);
+  	}
+  }
+
 
 
 	return (
 		<div style = {{textAlign:'center', paddingTop:'100px' }}>
 			<div className="ui raised very padded text container segment"> 
 				<h1 className = "ui  huge header" > POW Multiverse </h1>
+				<div className="ui tabular menu">
+				  <a className="active item">
+				    Player
+				  </a>
+				  {SuperUser()}
+				</div>
 				<div className = "ui blue one item inverted menu" style = {{textAlign:'center', marginTop:'40px' }} >
 					<Link href = "/reward"  className=" item" >
 						<h3>

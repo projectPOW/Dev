@@ -1,0 +1,8 @@
+Address MarketPlace on Ropsten:
+
+0x32b728b1730eb3AdA6C129038CA67FA37b03a738
+
+
+Address POWToken on Ropsten: 
+
+0x166FfD8498345078e250D79Bdb02870A2eB210AB

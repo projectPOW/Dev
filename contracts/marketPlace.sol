@@ -17,24 +17,32 @@ contract marketPlace is unlockItems{
 	
     /**
      * @dev The structure of a market order.
+     * @param name is the name of the item
      * @param idItem is the tokenId, 
      * @param price requested is the price wished for the items
+     * param level is the level of the item 
      * @param active indicate if the order is on or off
      */
 	struct MarketOrder{
+	    string name;
+	    uint8 level;
 		uint idItem;
 		uint priceRequested;
 		bool active; 
 	}
     
-    /**
+     /**
      * @dev whitelisted Order structure, 
      * @param the adress whitelisted
-     * @param isActivated indicate if the withelist address is on or off
+     * @param active indicate if the order is on or off
      */
 	struct whitelistOrder{
+	    string name;
+	    uint8 level;
+		uint idItem;
+		uint priceRequested;
 		address	whitelistAddress;
-		bool isActivated;
+		bool active;
 	}
 	
 	///@dev Mapping linking the orderId and the whitelistOrder structure.
@@ -45,10 +53,12 @@ contract marketPlace is unlockItems{
 	
 	///@dev Mapping of all the selling orders
 	mapping (uint => MarketOrder) public marketOrders;
-	
-	event NewMarketOrder (uint idOrder);
-	event soldMade (uint idOrder);
-	event orderCanceled(uint idOrder);
+
+	event newMarketOrder (uint tokenId);
+	event newMarketOrderWithlisted (uint tokenId);
+	event soldMade(uint tokenId);
+	event soldMadeWhitelisted(uint tokenId);
+	event orderCanceled(uint tokenId);
 
     ///@dev Get a list of all the owners by continent of items. On the front this will make a rank
 	function getRankByContinent(uint _numContinent) public view returns(address[] memory) {
@@ -91,58 +101,76 @@ contract marketPlace is unlockItems{
 		require(ownerOf(_idItemSold) == msg.sender, "Not the owner of the item");
 		require(!items[_idItemSold].onSold, "this item is already on sold");
 
-		marketOrders[_idItemSold] = MarketOrder(_idItemSold,_amountWhished, true);
+		string memory nameItem = items[_idItemSold].name;
+	    uint8 levelOrder = items[_idItemSold].levelItem;
+
+		marketOrders[_idItemSold] = MarketOrder(nameItem,levelOrder,_idItemSold,_amountWhished, true);
 		items[_idItemSold].onSold = true;
+		
+		emit newMarketOrder (_idItemSold);
 	}
     
     ///@dev Allows owners to set a whitelisted market order
 	function setMarketOrderWhitelisted(uint _amountWhished, uint _idItemSold, address _whitelistAddress) public{
 		require(ownerOf(_idItemSold) == msg.sender, "Not the owner of the item");
 		require(!items[_idItemSold].onSold, "this item is already on sold");
+
+		string memory nameItem = items[_idItemSold].name;
+        uint8 levelOrder = items[_idItemSold].levelItem;
 		
-		marketOrders[_idItemSold] = MarketOrder(_idItemSold,_amountWhished, true);
-		orderWithWithelist[_idItemSold] = whitelistOrder(_whitelistAddress, true);
+		orderWithWithelist[_idItemSold] = whitelistOrder(nameItem,levelOrder,_idItemSold,_amountWhished, _whitelistAddress, true);
 		items[_idItemSold].onSold = true;
+		
+		emit newMarketOrderWithlisted(_idItemSold);
 	}
 	
 	///@dev Allows anyone to buy an existing selling  
 	function getOrder(uint _idOrder) public payable{
+		require(!orderWithWithelist[_idOrder].active, "order whitlisted" );
 		require(marketOrders[_idOrder].active, "this order does not exist");
-		require(!orderWithWithelist[_idOrder].isActivated, "order whitlisted" );
 		require(msg.value == (marketOrders[_idOrder].priceRequested * base), "price not exact");
+
+		items[_idOrder].onSold = false;
 
 		balancePlayer[ownerOf(_idOrder)] = balancePlayer[ownerOf(_idOrder)] + msg.value;
 		_transfer(ownerOf(_idOrder),msg.sender, _idOrder);
 		_endOrder(_idOrder);
+
+		emit soldMade(_idOrder);
 	}
 	
     ///@dev Allows the whitlisted address only to get the item 
     function getWhitelistedOrder(uint _idOrder) public payable{
-		require(marketOrders[_idOrder].active, "this order does not exist");
-		require(orderWithWithelist[_idOrder].isActivated, "No withlist address for this order" );
+		require(!marketOrders[_idOrder].active, "this order is in the open market");
+		require(orderWithWithelist[_idOrder].active, "This address doesn't exist" );
 		require(orderWithWithelist[_idOrder].whitelistAddress == msg.sender , "Not the selected reiceiver");
 		require(msg.value == (marketOrders[_idOrder].priceRequested * base), "price not exact");
+
+		items[_idOrder].onSold = false;
 
 		balancePlayer[ownerOf(_idOrder)] = balancePlayer[ownerOf(_idOrder)] + msg.value;
 		_transfer(ownerOf(_idOrder),msg.sender, _idOrder);
 		_endOrder(_idOrder);
+
+		emit soldMadeWhitelisted(_idOrder);
 	}
     
     ///@dev A seller can cancel a pending selling order
 	function cancelOrder(uint _idOrder) public {
 		require (ownerOf(_idOrder) == msg.sender);
-		
-		marketOrders[_idOrder] = MarketOrder(0,0,false);
-		orderWithWithelist[_idOrder].isActivated = false;
+
 		items[_idOrder].onSold = false;
+
+		 _endOrder(_idOrder);
+
+		emit orderCanceled(_idOrder);
 	}
 	
 	///@dev End an order
 	function _endOrder(uint _idOrder) private {
 		
-		marketOrders[_idOrder] = MarketOrder(0,0,false);
-		orderWithWithelist[_idOrder].isActivated = false;
-		items[_idOrder].onSold = false;
+		delete marketOrders[_idOrder];
+		delete orderWithWithelist[_idOrder];
 	}
     
     ///@dev Allows the seller withdraw all his money from selling

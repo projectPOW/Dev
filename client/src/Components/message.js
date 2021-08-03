@@ -44,11 +44,21 @@ const Message = ({dataNftPlayer,dataFongPlayer,rewardEarned, rewardFONG,setRewar
 
 	const state = active === true ? '' : 'hidden';
 
+	const playerName = () =>{
+
+		if (dataNftPlayer.isRegistered){
+			return dataNftPlayer.login;
+		}else{
+			return dataFongPlayer.login;
+		}
+
+	}
+
 	return(
 		<div>
 			<div className="ui message">
 			  <h2>
-			    {`Welcome back ${dataFongPlayer.login}!`}
+			    {`Welcome back ${playerName()}!`}
 			  </h2>
 			  <div className = "ui header"> Your data </div>
 			  <ul className="list">
@@ -73,7 +83,9 @@ const Message = ({dataNftPlayer,dataFongPlayer,rewardEarned, rewardFONG,setRewar
 			   			{timerBubbleERC20()}
 					</div>	  	
 			</div>
-			<button className = "ui button hidden " onClick = {onClick}> view item</button>
+			<div style = {{textAlign :"center"}}>
+		       <button className = "ui button  " onClick = {onClick} style = {{textAlign : "center"}}> view item</button>
+		    </div>			
 		</div>
 	)
 }

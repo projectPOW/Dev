@@ -7,9 +7,9 @@ const Tab2ColonesRank = ({entryTab}) => {
 
 
 		return(
-			<tr key={Tab.value}>
-				<td> {index} </td>
-				<td>{Tab.label}</td>
+			<tr key={index}>
+				<td> {index +1} </td>
+				<td>{Tab}</td>
 			</tr>
 			)
 		})
@@ -19,8 +19,8 @@ return (
 		<div>
 			<table className = "ui celled table">
 				<thead>
-					<tr><th>Test</th>
-					<th>ID</th>
+					<tr><th>Rank</th>
+					<th>Address</th>
 				</tr></thead>
 					<tbody>
 					{tabRender}

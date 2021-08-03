@@ -1,17 +1,17 @@
 import React from 'react';
 
 
-const TabUnlockedItems = ({entryTab}) => {
+const TabOrderOn = ({entryTab}) => {
 
 	const tabRender = entryTab.map( (Tab, index) => {
 
-
+		
 		return(
-			<tr key={Tab.tokenId}>
-				<td> {Tab.tokenId} </td>
-				<td>{Tab.name}</td>
-				<td>{Tab.composition}</td>
-				<td>{Tab.levelItem}</td>
+			<tr key={Tab.idItem}>
+				<td> {Tab.idItem} </td>
+				<td> {Tab.name} </td>
+				<td>{Tab.priceRequested} ETH</td>
+				<td>{Tab.level}</td>
 			</tr>
 			)
 		})
@@ -23,8 +23,8 @@ return (
 				<thead>
 					<tr><th>Id Token</th>
 					<th>Name</th>
-					<th>Composition</th>
-					<th>Level Item</th>
+					<th>Price</th>
+					<th>Level</th>
 				</tr></thead>
 					<tbody>
 					{tabRender}
@@ -36,4 +36,4 @@ return (
 	)
 }
 
-export default TabUnlockedItems;
+export default TabOrderOn;

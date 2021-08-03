@@ -16,7 +16,7 @@ import "@openzeppelin/openzeppelin-contracts-master/contracts/access/Ownable.sol
 contract itemsFactory is ERC721Enumerable, Ownable, interfaceMultiverseNFT{
   
     ///@dev Contructor with the address of the interfaceMultiverse contract and the name and symbol of the NFT
-    constructor () ERC721("powUniq","POW"){
+    constructor () ERC721("PowNFT","KNFT"){
     }
 
     ///@dev Those are the differents types of items which can be created 

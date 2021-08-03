@@ -47,46 +47,47 @@ const Fusion = ({getMyItems,unlockedItemsTab, fusionItem, eventNewMergedItem, se
 
 	return (
 		<div style = {{paddingTop:'100px' }}>
-			<div>
-				<DropdownFusion
-				label="Select your first Item"
-				options={unlockedItemsTab}
-				firstSelected={secondeItem}
-				selected={firstItem}
-				onSelectedChange={setFirstItem}
-				/>
-			</div>
-			<div>
-				<DropdownFusion
-				label="Select your secondeItem"
-				options={unlockedItemsTab}
-				firstSelected = {firstItem}
-				selected={secondeItem}
-				onSelectedChange={setSecondeItem}
-			/>
-			</div>
-			<div>
-				<div className="ui message">
-				  <div className="header">
-				    Result of Merging: 
-				  </div>
-					  <p>
-					  	{finalItem}
-					  </p>  
+			<div className="ui raised very padded text container segment">
+				<div>
+					<DropdownFusion
+					label="Select a Monument"
+					options={unlockedItemsTab}
+					firstSelected={secondeItem}
+					selected={firstItem}
+					onSelectedChange={setFirstItem}
+					/>
 				</div>
-			</div>
-
-			<div style = {{marginTop : "50px"}}>
-				<button className = "ui button" onClick = {onClick}> Change selection </button>
-				<button className = "ui button" onClick = {requestFusion}> Fusionner </button>
-				<button className = {`ui ${visible} button`} onClick = {cleanFunction}> Re-Merge</button>
-				<button className = {`ui ${visible2} button`} onClick = {dataNewItem}> View New item</button>
-				<BackButtonCleaning
-				textBack = "Back"
-				backPath = "/"
-				cleanFunction = {cleanFunction}
+				<div>
+					<DropdownFusion
+					label="Select a Materiel"
+					options={unlockedItemsTab}
+					firstSelected = {firstItem}
+					selected={secondeItem}
+					onSelectedChange={setSecondeItem}
 				/>
+				</div>
+				<div style = {{paddingTop:'30px' }}>
+					<div className="ui message" >
+					  <div className="header">
+					    Result of Merging: 
+					  </div>
+						  <p>
+						  	{finalItem}
+						  </p>  
+					</div>
+				</div>
 
+				<div style = {{marginTop : "50px"}}>
+					<button className = "ui button" onClick = {onClick}> Change selection </button>
+					<button className = "ui button" onClick = {requestFusion}> Fusionner </button>
+					<button className = {`ui ${visible} button`} onClick = {cleanFunction}> Re-Merge</button>
+					<button className = {`ui ${visible2} button`} onClick = {dataNewItem}> View New item</button>
+					<BackButtonCleaning
+					textBack = "Back"
+					backPath = "/"
+					cleanFunction = {cleanFunction}
+					/>
+				</div>
 			</div>
 		</div>
 	) ;
