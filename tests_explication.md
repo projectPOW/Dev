@@ -45,13 +45,14 @@ Une fois toutes ces étapes validées, nous aurons le code optimal nous permetta
 
 ## Tests marketPlace
 
-Ce contrat nous permettra d'effectuer des échanges NFT vs ERC 20 entre les addresse possédant des assets.
-Il est doté d'une partie permettant d'afficher les ordres de vente avec leur statuts open ou close et d'une autre partie permettant le d'effectuer les échanges.
+Ce contrat permet les echanges d'asset. Afin de nous assurer que tout se passe bien, nous suivons la methode TDD en verifiant la bonne recuperation des tableaux, des items appartenant aux joueur. 
 
-Pour écrire ce code nous allons utiliser des contrats Uniswap déjà configurer. Les tests sont à venir.
+Nous construisons ensuite le code de mise a diposition des ordres de ventes, et leur recuperation, sasn oublier leur suppresion des registres de ventes avec et l'attribution du paiment au vendeur.
 
 
-## Contrat POWTournament.sol
+## Contrat POWTournament
+
+A venir
 
 ## Test ERC20
 
