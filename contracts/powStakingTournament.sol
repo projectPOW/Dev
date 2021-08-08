@@ -6,6 +6,7 @@ import "./POWToken.sol";
 
 /** 
  * @title Tournament staking
+ * @notice This  contract set staking tournament. The player stake an amount and can get it at the end of the tournament
  * @dev Create several tournaments of staking with duration, theme and reward
  */
 contract POWStakingTournament is POWToken {
@@ -63,7 +64,7 @@ contract POWStakingTournament is POWToken {
         bool hasWithdrawn;
     } 
 
-
+    uint public counterTournament;
 
     /** 
      * @dev Mapping adress player => id tournament => player. The player can play to several tournament
@@ -81,14 +82,16 @@ contract POWStakingTournament is POWToken {
     event winnerSet (uint idTournament, address winner);
 
     ///@dev Set a new tournament
-    function setTournament (string memory _subjectTournament, uint _stakeRequested, uint _durationTournament, uint _idTournament, uint _rewardTournament) onlyOwner public {
-        require (!tournaments[_idTournament].isActive, "Please choose another Id");
+    function setTournament (string memory _subjectTournament, uint _stakeRequested, uint _durationTournament, uint _rewardTournament) onlyOwner public {
+        require (!tournaments[counterTournament].isActive, "Please choose another Id");
 
         uint durationInDays = _durationTournament * 1 days;
         uint counterTimeTournament = block.timestamp + durationInDays; 
 
-        tournaments[_idTournament] = Tournament(_idTournament, _stakeRequested, counterTimeTournament,_rewardTournament,_subjectTournament, true, TournamentStatus.IsOn, address(0));
-        emit newTournament (_idTournament);
+        tournaments[counterTournament] = Tournament(counterTournament, _stakeRequested, counterTimeTournament,_rewardTournament,_subjectTournament, true, TournamentStatus.IsOn, address(0));
+        
+        emit newTournament (counterTournament);
+        counterTournament ++;       
     }
 
     ///@dev End the game 
@@ -107,6 +110,7 @@ contract POWStakingTournament is POWToken {
     function setWinner(uint _idTournament, address _winner) public onlyOwner {
         require (tournaments[_idTournament].isActive, "this tournament doesn't exist");
         require (tournaments[_idTournament].tournamentStatus == TournamentStatus.IsCountingWinner, "Tournament not in the right status");
+        require ( balanceStaking[_winner][_idTournament].isRegistered , "This player did not participate");
 
         tournaments[_idTournament].winner = _winner;
         tournaments[_idTournament].tournamentStatus = TournamentStatus.WinnerSet;
@@ -117,19 +121,21 @@ contract POWStakingTournament is POWToken {
     }
 
     ///@dev Register a new player
-    function registerPlayer(uint _idTournament, uint _amount) public {
+    function registerPlayer(uint _idTournament) public {
+        require (multiverseData[msg.sender].isRegistered, "Non registered player");
         require (tournaments[_idTournament].isActive, "this tournament doesn't exist");
         require (tournaments[_idTournament].tournamentStatus == TournamentStatus.IsOn, "Tournament not in the right status");
         require (balanceOf(msg.sender) >= tournaments[_idTournament].stakeRequested, "balance too low");
         require (!balanceStaking[msg.sender][_idTournament].isRegistered, "Player already registered");
 
-        _burn(msg.sender, _amount);
+        _burn(msg.sender, tournaments[_idTournament].stakeRequested);
 
-        balanceStaking[msg.sender][_idTournament] = PlayerTournament(_amount, true, false);
+        balanceStaking[msg.sender][_idTournament] = PlayerTournament(tournaments[_idTournament].stakeRequested, true, false);
     }
 
     ///@dev Every player withdraw their staking at the end of the tournament
     function withdrawStaking(uint _idTournament) public {
+        require (multiverseData[msg.sender].isRegistered, "Non registered player");
         require (tournaments[_idTournament].tournamentStatus == TournamentStatus.WinnerSet, "Tournament not in the right status");
         require (balanceStaking[msg.sender][_idTournament].isRegistered, "you didn't participate this tournement");
         require (!balanceStaking[msg.sender][_idTournament].hasWithdrawn, "Stake already withdrawn");

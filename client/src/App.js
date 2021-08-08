@@ -1,7 +1,7 @@
 import Background from "./Components/img/Background.png";
 import React, { useState, useEffect } from "react";
 import POW_NFT from "./contracts/marketPlace.json";
-import POW_FONG from "./contracts/POWToken.json";
+import POW_FONG from "./contracts/POWStakingTournament.json";
 import getWeb3 from "./getWeb3";
 import SetUpdatePlayer from "./Components/setUpdatePlayer";
 import Homepage from "./Components/homepage";
@@ -26,6 +26,10 @@ import BuyOrderWhitelisted from './Components/buyOrderWhitelisted';
 import SetUpPlayer from "./Components/setUpPlayer";
 import UpdatePlayer from "./Components/updatePlayer";
 import GetBalance from "./Components/getBalance";
+import SetTournament from "./Components/setTournament";
+import CloseTournament from "./Components/closeTournament";
+import SetWinnerTournament from "./Components/setWinnerTournament";
+import WithdrawStakeReward from "./Components/withdrawStakeReward";
 
 
 
@@ -126,7 +130,17 @@ const App = () => {
   //Update money withrawn
   const [updateMoneyWithdrawn, setUpdateMoneyWithdrawn] = useState(false);
 
+  //Array of all tournament waiting for winner to be set
+  const [tournamentWaitingForWinner, setTournamentWaitingForWinner] = useState([]);
 
+  //Array of all current staking tournament
+  const [currentStakingTournament, setCurrentStakingTournament] = useState([]);
+
+  //Array of all current playable staking tournament
+  const [playableTournament, setPlayableTournament] = useState([]);
+
+  //Array of all current playable staking tournament
+  const [closedTournament, setClosedTournament] = useState([]);
 
 
 
@@ -284,7 +298,20 @@ const App = () => {
           .on("data", (event) => {
         }).on("error", console.error);
 
-      /************************************/
+          instance2.events.newTournament()
+          .on("data", (event) => {
+            updateStakingTournamentTab();
+        }).on("error", console.error);
+
+          instance2.events.endPlayTournament()
+          .on("data", (event) => {
+            updateStakingTournamentTab();
+        }).on("error", console.error);
+
+          instance2.events.winnerSet()
+          .on("data", (event) => {
+            updateTournamentWaitingForWinner();
+        }).on("error", console.error);
 
         setAdmin(owner);
         setContract2(instance2);
@@ -299,9 +326,9 @@ const App = () => {
           console.error(error);
       }
     }
+
       initWeb3();
-      //getPlayerDataNFT();
-      //getPlayerDataFONG();
+     
   },[accounts,newOrderId,newOrderIdWhitelisted, window.location.pathname]);
 
  /************************************/
@@ -541,6 +568,199 @@ const App = () => {
       console.log(error);
     } 
   }
+
+  //Update the array of active tournament
+  const updateStakingTournamentTab = async () => {
+
+    let allTab2 = [];
+
+    if (contract2 != null){
+          contract2.getPastEvents("newTournament", { fromBlock: 0, toBlock: "latest" },
+       function(error, event){ 
+        for (let i= 0 ; i<event.length;i++){
+
+          allTab2.push(event[i].returnValues.idTournament);
+        } 
+      })
+      .then(async function (event) {
+
+        let intArr = [];
+
+        for (let k = 0; k < allTab2.length; k++){
+
+          let check =  await contract2.methods.tournaments(allTab2[k]).call();
+             if (check.isActive) {
+
+              let status;
+
+              switch (check.tournamentStatus){
+
+                case "1":
+                  status = "Running";
+                  break;
+                case "2":
+                  status= "Waiting for winner";
+                  break;
+                case "3":
+                   status= "Closed";
+                  break;
+              }
+
+
+              let timeRemain = Math.round(((check.durationTournament- Math.floor(Date.now() / 1000))/60/60/24)*100)/100;
+              check.timeLeft = timeRemain;
+              check.state = `${status}`;
+              intArr.push(check);
+             }
+        }
+        setCurrentStakingTournament(intArr); 
+        console.log(); 
+      });
+     }
+  }
+
+
+  //Update the array of waiting for winner
+  const updateTournamentWaitingForWinner = async () => {
+
+    let allTab3 = [];
+
+    if (contract2 != null){
+          contract2.getPastEvents("newTournament", { fromBlock: 0, toBlock: "latest" },
+       function(error, event){ 
+        for (let i= 0 ; i<event.length;i++){
+
+          allTab3.push(event[i].returnValues.idTournament);
+        } 
+      })
+      .then(async function (event) {
+
+        let intArr = [];
+
+        for (let k = 0; k < allTab3.length; k++){
+
+          let check =  await contract2.methods.tournaments(allTab3[k]).call();
+             if (check.tournamentStatus == 2 ) {
+
+              let status;
+
+              switch (check.tournamentStatus){
+
+                case "1":
+                  status = "Running";
+                  break;
+                case "2":
+                  status= "Waiting for winner";
+                  break;
+                case "3":
+                   status= "Closed";
+                  break;
+              }
+
+              check.state = `${status}`;
+              intArr.push(check);
+             }
+        }
+        setTournamentWaitingForWinner(intArr); 
+      });
+     }
+  }
+
+  //Update the array of playable tournaments
+  const updateTournamentPlayable = async () => {
+
+    let allTab4 = [];
+
+    if (contract2 != null){
+          contract2.getPastEvents("newTournament", { fromBlock: 0, toBlock: "latest" },
+       function(error, event){ 
+        for (let i= 0 ; i<event.length;i++){
+
+          allTab4.push(event[i].returnValues.idTournament);
+        } 
+      })
+      .then(async function (event) {
+
+        let intArr = [];
+
+        for (let k = 0; k < allTab4.length; k++){
+
+          let check =  await contract2.methods.tournaments(allTab4[k]).call();
+             if (check.tournamentStatus == 1 ) {
+
+              let status;
+
+              switch (check.tournamentStatus){
+
+                case "1":
+                  status = "Running";
+                  break;
+                case "2":
+                  status= "Waiting for winner";
+                  break;
+                case "3":
+                   status= "Closed";
+                  break;
+              }
+
+              let timeRemain = Math.round(((check.durationTournament- Math.floor(Date.now() / 1000))/60/60/24)*100)/100;
+              check.timeLeft = timeRemain;
+              intArr.push(check);
+             }
+        }
+        setPlayableTournament(intArr); 
+      });
+     }
+  }
+
+
+
+   //Update the array of finishedTournament
+  const updateTournamentFinished = async () => {
+
+    let allTab5 = [];
+
+    if (contract2 != null){
+          contract2.getPastEvents("newTournament", { fromBlock: 0, toBlock: "latest" },
+       function(error, event){ 
+        for (let i= 0 ; i<event.length;i++){
+
+          allTab5.push(event[i].returnValues.idTournament);
+        } 
+      })
+      .then(async function (event) {
+
+        let intArr = [];
+
+        for (let k = 0; k < allTab5.length; k++){
+
+          let check =  await contract2.methods.tournaments(allTab5[k]).call();
+             if (check.tournamentStatus == 3 ) {
+
+              let status;
+
+              switch (check.tournamentStatus){
+
+                case "1":
+                  status = "Running";
+                  break;
+                case "2":
+                  status= "Waiting for winner";
+                  break;
+                case "3":
+                   status= "Closed";
+                  break;
+              }
+
+              intArr.push(check);
+             }
+        }
+        setClosedTournament(intArr); 
+      });
+     }
+  }
+
+   
 
 /************************************/
 
@@ -848,6 +1068,76 @@ const App = () => {
     }
   }
 
+  //Set the tournament
+  const setTournament = async (subject, stake, duration, reward) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.setTournament(subject, stake, duration, reward).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  const endTournament = async (idTournament) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.endTournament(idTournament).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  const setWinner = async (idTournament, winner) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.setWinner(idTournament, winner).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  const registerPlayer = async (idTournament) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.registerPlayer(idTournament).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+   const withdrawStaking = async (idTournament) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.withdrawStaking(idTournament).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  } 
+
+  const withdrawReward = async () => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.withdrawReward().send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  } 
+
+
+
+
 /************************************/
 
 
@@ -956,7 +1246,13 @@ const App = () => {
         />
       </Route> 
       <Route path = "/tournament" >
-        Nothing
+        <Tournament
+        updateTournamentPlayable = {updateTournamentPlayable}
+        setPlayableTournament = {setPlayableTournament}
+        playableTournament = {playableTournament}
+        accounts = {accounts}
+        registerPlayer = {registerPlayer}
+        />
       </Route> 
       <Route path = "/admin/setUpdate" >
         <SetUpdatePlayer 
@@ -1104,7 +1400,44 @@ const App = () => {
         setBalanceOfPlayer = {setBalanceOfPlayer}
         updateMoneyWithdrawn = {updateMoneyWithdrawn}
         />
-      </Route>                   
+      </Route>
+      <Route path = "/admin/tournament" >
+        <SetTournament
+        accounts = {accounts}
+        setTournament = {setTournament}
+        />
+      </Route> 
+      <Route path = "/admin/closetournament" >
+        <CloseTournament
+        accounts = {accounts}
+        updateStakingTournamentTab = {updateStakingTournamentTab}
+        currentStakingTournament = {currentStakingTournament}
+        endTournament = {endTournament}
+        setCurrentStakingTournament = {setCurrentStakingTournament}
+        />
+      </Route> 
+
+      <Route path = "/admin/setwinnertournament" >
+        <SetWinnerTournament
+        accounts = {accounts}
+        setWinner = {setWinner}
+        updateTournamentWaitingForWinner = {updateTournamentWaitingForWinner}
+        tournamentWaitingForWinner = {tournamentWaitingForWinner}
+        setTournamentWaitingForWinner = {setTournamentWaitingForWinner}
+        />
+      </Route> 
+       <Route path = "/stakingtournament" >
+        <WithdrawStakeReward 
+        accounts = {accounts}
+        setClosedTournament = {setClosedTournament}
+        closedTournament = {closedTournament}
+        updateTournamentFinished = {updateTournamentFinished}
+        withdrawStaking = {withdrawStaking}
+        withdrawReward = {withdrawReward}
+        />
+      </Route>     
+
+                             
     </div>
   );
 }

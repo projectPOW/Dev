@@ -96,7 +96,7 @@ contract("Contract Pow ERC20", accounts => {
 			let subject = "Australia";
 			let reward = new BN(5);
 
-			await PowTokenInstance.setTournament(subject,stake, duration, idTournament,reward, {from : _owner});
+			await PowTokenInstance.setTournament(subject,stake, duration,reward, {from : _owner});
 			let checkTournament = await PowTokenInstance.tournaments.call(0);	
 
 			expect(checkTournament[0]).to.be.bignumber.equal(idTournament);
@@ -116,7 +116,7 @@ contract("Contract Pow ERC20", accounts => {
 			let subject = "Australia";
 			let reward = new BN(5);
 
-			await PowTokenInstance.setTournament(subject,stake, duration, idTournament, reward, {from : _owner});
+			await PowTokenInstance.setTournament(subject,stake, duration, reward, {from : _owner});
 			
 			let checkTournament = await PowTokenInstance.tournaments.call(0);	
 			expect(checkTournament[0]).to.be.bignumber.equal(idTournament);
@@ -145,7 +145,13 @@ contract("Contract Pow ERC20", accounts => {
 			let subject = "Australia";
 			let reward = new BN(5);
 
-			await PowTokenInstance.setTournament(subject,stake, duration, idTournament,reward, {from : _owner});
+			await PowTokenInstance.setMultiversePlayer( _player1, "albert", {from: _owner});
+
+			await PowTokenInstance.myMint(_player1,stake);
+
+			await PowTokenInstance.setTournament(subject,stake, duration, reward, {from : _owner});
+
+			await PowTokenInstance.registerPlayer(idTournament, {from:_player1});
 			
 			await increaseTime(_2Days);
 
@@ -169,11 +175,13 @@ contract("Contract Pow ERC20", accounts => {
 			let subject = "Australia";
 			let reward = new BN(5);
 
+			await PowTokenInstance.setMultiversePlayer( _player1, "albert", {from: _owner});
+
 			await PowTokenInstance.myMint(_player1,stake);
 
-			await PowTokenInstance.setTournament(subject,stake, duration, idTournament,reward, {from : _owner});
+			await PowTokenInstance.setTournament(subject,stake, duration, reward, {from : _owner});
 			
-			await PowTokenInstance.registerPlayer(idTournament, stake, {from:_player1});
+			await PowTokenInstance.registerPlayer(idTournament, {from:_player1});
 
 			let checkTournament = await PowTokenInstance.balanceStaking.call(_player1,0);
 			let newBalancePlayer = await PowTokenInstance.balanceOf(_player1);
@@ -191,11 +199,13 @@ contract("Contract Pow ERC20", accounts => {
 			let subject = "Australia";
 			let reward = new BN(5);
 
+			await PowTokenInstance.setMultiversePlayer( _player1, "albert", {from: _owner});
+
 			await PowTokenInstance.myMint(_player1,stake);
 
-			await PowTokenInstance.setTournament(subject,stake, duration, idTournament,reward, {from : _owner});
+			await PowTokenInstance.setTournament(subject,stake, duration,reward, {from : _owner});
 			
-			await PowTokenInstance.registerPlayer(idTournament, stake, {from:_player1});
+			await PowTokenInstance.registerPlayer(idTournament, {from:_player1});
 
 			await increaseTime(_2Days);
 
@@ -222,11 +232,13 @@ contract("Contract Pow ERC20", accounts => {
 			let subject = "Australia";
 			let reward = new BN(5);
 
+			await PowTokenInstance.setMultiversePlayer( _player1, "albert", {from: _owner});
+
 			await PowTokenInstance.myMint(_player1,stake);
 
-			await PowTokenInstance.setTournament(subject,stake, duration, idTournament,reward, {from : _owner});
+			await PowTokenInstance.setTournament(subject,stake, duration, reward, {from : _owner});
 			
-			await PowTokenInstance.registerPlayer(idTournament, stake, {from:_player1});
+			await PowTokenInstance.registerPlayer(idTournament, {from:_player1});
 
 			await increaseTime(_2Days);
 

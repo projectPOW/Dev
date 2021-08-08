@@ -44,6 +44,13 @@ const Admin = ({accounts}) => {
 				    	</h3>
 				  	</Link>
 				</div>
+				<div className = "ui blue one item inverted menu" style = {{textAlign:'center', marginTop:'40px' }} >
+					<Link href = "/admin/tournament" className=" item">
+						<h3>
+				    		Set/End Tournament
+				    	</h3>
+				  	</Link>
+				</div>
 				<BackButton
 				textBack = "Back"
 				backPath = "/"
