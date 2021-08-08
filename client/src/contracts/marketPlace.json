@@ -39607,6 +39607,318 @@
     "version": "0.8.1+commit.df193b15.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "approved",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        },
+        "0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "operator",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "approved",
+              "type": "bool"
+            }
+          ],
+          "name": "ApprovalForAll",
+          "type": "event"
+        },
+        "0xd1271c0a878b06e77c2b145e81fda258074d1d9f72d29461da6de567fe185db3": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addressPlayer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "loginPlayer",
+              "type": "string"
+            }
+          ],
+          "name": "NewPlayerRegistered",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        },
+        "0xad23199c98816edea929c9f85f84a5f67e549ffca931f957dfd259f8d197a7c4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            }
+          ],
+          "name": "fusionnedItemCreate",
+          "type": "event"
+        },
+        "0xf626e9712bfc1d05519ae9d87cfe12f82248296f837942a0d818b10080ed4e4c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "lockItem",
+          "type": "event"
+        },
+        "0xaa8dbd7aeed8b3914c4e149be153ca00a131ab0e7a68cf62968096dd96643c84": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            }
+          ],
+          "name": "moneyWithdrawn",
+          "type": "event"
+        },
+        "0x9c360399ee87fc71eae0d33371b115231027a3b3f6c320bea62f13066c5b3918": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            }
+          ],
+          "name": "myNewMarketOrder",
+          "type": "event"
+        },
+        "0x64f349d7da07a6497336f4e97986440795cc4edc9f0fe4514a1ff8ed88b1ba32": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            }
+          ],
+          "name": "myNewMarketOrderWithlisted",
+          "type": "event"
+        },
+        "0x5e9df96d01e5daf29f9d24dc59334e40b085ea25898717edc405511e91329ffb": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "newItemLock",
+          "type": "event"
+        },
+        "0x96dad580ff7cb1c15b45feb964108c979a31b52a67d7882e43374ce72d2cb958": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "newItemUnlock",
+          "type": "event"
+        },
+        "0x937f9d0a330cd623dbab981ab5e99ab8c97188f46ccc25d30c693256903be68e": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "newMarketOrder",
+          "type": "event"
+        },
+        "0xf25189fc08db098d1f7e82cbd0b290cfa249e60cc2974fd85da18e13057cbb00": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "newMarketOrderWithlisted",
+          "type": "event"
+        },
+        "0x8cd0c40718b4685e7ef989908e0dbb7523bbd6db2d870cbb6c78f838074d2919": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            }
+          ],
+          "name": "orderCanceled",
+          "type": "event"
+        },
+        "0xaa6183438646fc8bb56f82868ce90c0a5bd1301970b115e976c90c1d696a1550": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "login",
+              "type": "string"
+            }
+          ],
+          "name": "playerUpdated",
+          "type": "event"
+        },
+        "0x9623300d947502693ac307b1017d04f92b9a1ddd161e89aeff76da5d9a251694": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "tokenName",
+              "type": "string"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            }
+          ],
+          "name": "rewardWithdrawn",
+          "type": "event"
+        },
+        "0x925ef4858fde11a57c7c6f1b4f3df42ba2f8e0dbbe6535e7fce027d5dbe31074": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "soldMade",
+          "type": "event"
+        },
+        "0x244395abe1c90de8dcc7e1cb74321ba0518856f2e180c296472105c7e4e949c6": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "soldMadeWhitelisted",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x636e77e5ce34D2Cd791f9CF1E08722EEe3dF01AD",
+      "transactionHash": "0x915da42aaebc9f499bce5d6664b46d5359f39c39d9b083f26466bf5921868ac5"
+    },
     "5777": {
       "events": {
         "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
@@ -39921,7 +40233,7 @@
     }
   },
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-08T19:15:36.027Z",
+  "updatedAt": "2021-08-08T23:17:11.094Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "This contract allows the player to exchange his NFT against ETH. Here he can make selling order whitlested or not.",

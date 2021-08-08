@@ -27810,6 +27810,171 @@
     "version": "0.8.1+commit.df193b15.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        },
+        "0xd1271c0a878b06e77c2b145e81fda258074d1d9f72d29461da6de567fe185db3": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "addressPlayer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "loginPlayer",
+              "type": "string"
+            }
+          ],
+          "name": "NewPlayerRegistered",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        },
+        "0x4f340a8afc70ac9bd1d9d0641117f1febb4de4c0ca9bdffdf02e0f4d1696f44f": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "idTournament",
+              "type": "uint256"
+            }
+          ],
+          "name": "endPlayTournament",
+          "type": "event"
+        },
+        "0x905ba88c728c23467d10cea61f7a517e2d71fa47d3481be50e86457071d84fd8": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "newAmountReward",
+          "type": "event"
+        },
+        "0x9b31227c2c81192ff59c33d9e0ba8e195f7956db1628854cd066819676aed952": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "idTournament",
+              "type": "uint256"
+            }
+          ],
+          "name": "newTournament",
+          "type": "event"
+        },
+        "0xaa6183438646fc8bb56f82868ce90c0a5bd1301970b115e976c90c1d696a1550": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "login",
+              "type": "string"
+            }
+          ],
+          "name": "playerUpdated",
+          "type": "event"
+        },
+        "0xd3f9ddfe1db89b547b02b16d65f9f96eef894e9d4b83c52a2732b741112a990a": {
+          "anonymous": false,
+          "inputs": [],
+          "name": "rewardWithdrawn",
+          "type": "event"
+        },
+        "0xe0c7b482cd261234be1f95e8f48c684813970e9c5a53da38dbd622166d89e618": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "idTournament",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "winner",
+              "type": "address"
+            }
+          ],
+          "name": "winnerSet",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x6F0d2Eb6324fa8EF6bf69D8507e55D61e7215005",
+      "transactionHash": "0x695e3a22b35438cbf43030ccc56d11c32821bf65966abaf033c3db02c168d7e7"
+    },
     "5777": {
       "events": {
         "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
@@ -27977,7 +28142,7 @@
     }
   },
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-08T19:15:38.018Z",
+  "updatedAt": "2021-08-08T23:17:38.418Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Create several tournaments of staking with duration, theme and reward",

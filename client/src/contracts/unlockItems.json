@@ -24185,7 +24185,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-08T19:15:32.576Z",
+  "updatedAt": "2021-08-08T23:15:39.298Z",
   "devdoc": {
     "details": "This contract allows the administrator to unlock or lock items in the database",
     "kind": "dev",

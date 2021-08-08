@@ -22069,7 +22069,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-08T19:15:32.489Z",
+  "updatedAt": "2021-08-08T23:15:39.201Z",
   "devdoc": {
     "details": "The itemsFactory contract create the basics NFT ERC721 and attribute them to the administrator balance. Two levels of items can be created. Level 1 represesent card of the item, level 2 is items in paper or stone of material",
     "kind": "dev",
