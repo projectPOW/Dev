@@ -14,7 +14,7 @@ const SearchBar = ({textButton,textToEnter,holder, functionToCall}) => {
 		<div className = "search-bar">
 			<form className = "ui form">
 				<div className = "field">
-					<label>{textToEnter}</label>
+					<label style = {{ textAlign:'left' }}>{textToEnter}</label>
 					<input
 						id="address"
 						type = "text"
@@ -22,7 +22,7 @@ const SearchBar = ({textButton,textToEnter,holder, functionToCall}) => {
 						onChange = {(e) => setinputText(e.target.value)}
 						placeholder = {holder}
 					/>
-					<button className = "green ui button" onClick = {onSubmit}> {textButton} </button>
+					<button className = "green ui button" onClick = {onSubmit} style = {{ marginTop:'10px' }}> {textButton} </button>
 				</div>
 			</form>
 		</div>

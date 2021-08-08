@@ -20,10 +20,10 @@ const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3
 
 	return (
 
-		<div className = "search-bar ui segment">
+		<div className = "search-bar ui">
 			<form className = "ui form">
 				<div className = "field">
-					<h2 className = "ui second header" style = {{textAlign:'center', margin:'50px' }} >{title1}</h2>
+					<label className = "ui second header" style = {{textAlign:'left', marginTop:'40px' }} >{title1}</label>
 					<input
 						id="address"
 						type = "text"
@@ -31,7 +31,7 @@ const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3
 						onChange = {(e) => setinputText1(e.target.value)}
 						placeholder = {holder1}
 					/>
-					<h2 className = "ui second header" style = {{textAlign:'center', margin:'50px' }} >{title2}</h2>
+					<label className = "ui second header" style = {{textAlign:'left', marginTop:'40px' }} >{title2}</label>
 					<input
 						id="address"
 						type = "text"
@@ -39,7 +39,7 @@ const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3
 						onChange = {(e) => setinputText2(e.target.value)}
 						placeholder = {holder2}
 					/>
-					<h2 className = "ui second header" style = {{textAlign:'center', margin:'50px' }} >{title3}</h2>
+					<label className = "ui second header" style = {{textAlign:'left', marginTop:'40px' }} >{title3}</label>
 					<input
 						id="address"
 						type = "text"
@@ -47,7 +47,7 @@ const FourSearchBar = ({title1, title2, title3, title4, holder1, holder2,holder3
 						onChange = {(e) => setinputText3(e.target.value)}
 						placeholder = {holder3}
 					/>
-					<h2 className = "ui second header" style = {{textAlign:'center', margin:'50px' }} >{title4}</h2>
+					<label className = "ui second header" style = {{textAlign:'left', marginTop:'40px' }} >{title4}</label>
 					<input
 						id="address"
 						type = "text"

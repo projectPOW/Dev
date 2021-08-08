@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import BackButtonCleanningClose from "./backButtonCleaningClose";
-import Link from "./link"
+
 
 const TripleSearchBarMarketOrderWhitelisted = ({title1, title2, title3 ,holder1, holder2, holder3, functionToCall,textButton1, textButton2, textButton3, functionToCall2}) => {
 

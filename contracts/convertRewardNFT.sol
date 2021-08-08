@@ -15,7 +15,7 @@ contract convertRewardNFT is itemsFactory {
    ///@dev RandNonce for the random Item 
     uint private randNonce = 1;
     
-    event rewardWithdrawn(string tokenName);
+    event rewardWithdrawn(string tokenName,address indexed _to);
     
     ///@dev Transform the reward as a NFT
     function getReward () public {
@@ -29,7 +29,7 @@ contract convertRewardNFT is itemsFactory {
           for (uint i = multiverseData[msg.sender].rewardLv1; i > 0; i-- ){
             uint idItem =  getAvailableItem(1); 
              _transfer(_administrator, msg.sender, idItem);
-             emit rewardWithdrawn(items[idItem].name);
+             emit rewardWithdrawn(items[idItem].name, msg.sender);
           }
           multiverseData[msg.sender].rewardLv1 = 0;
         }
@@ -38,7 +38,7 @@ contract convertRewardNFT is itemsFactory {
           for (uint i = multiverseData[msg.sender].rewardLv2; i > 0; i-- ){
             uint idItem =  getAvailableItem(2); 
             _transfer(_administrator, msg.sender, idItem);
-            emit rewardWithdrawn(items[idItem].name);
+            emit rewardWithdrawn(items[idItem].name, msg.sender);
           }
           multiverseData[msg.sender].rewardLv2 = 0;
         }

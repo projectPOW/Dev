@@ -10,6 +10,9 @@ import "./fusion.sol";
  */
  
 contract unlockItems is fusion { 
+
+    event newItemLock();
+    event newItemUnlock();
  
     ///@dev Gives to the administrator a list of tokenId locked
     function getLockedItems() onlyOwner public view returns(uint[] memory) {
@@ -37,22 +40,23 @@ contract unlockItems is fusion {
               count ++;
             }
           }
-        }/*else{
-          revert("No lockedItems");
-        }*/
+        }
         return lockedItems;
       }
 
     ///@dev Administrator unlocks items
     function unlock(uint _Id) public onlyOwner {
         require (ownerOf(_Id) == msg.sender, "Error , token owned or non existent");
+        require (items[_Id].locked == true, "Error , token already unlocked");
         items[_Id].locked = false;
+        emit newItemUnlock();
     }
     
     ///@dev Administrator locks items 
     function lock(uint _Id) public onlyOwner {
         require (ownerOf(_Id) == msg.sender, "Error , token owned or non existent");
+        require (items[_Id].locked == false, "Error , token already locked");
         items[_Id].locked = true;
-   
+        emit newItemLock();
     }
 }

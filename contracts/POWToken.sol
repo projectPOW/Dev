@@ -30,8 +30,6 @@ contract POWToken is ERC20, Ownable, interfaceMultiverseERC20 {
     event rewardWithdrawn();
     event newAmountReward();
 
-    mapping (address => uint ) public _balances; 
-
     /**
      * @dev define the mint function
      * @param target address of target

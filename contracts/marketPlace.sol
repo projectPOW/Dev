@@ -54,11 +54,14 @@ contract marketPlace is unlockItems{
 	///@dev Mapping of all the selling orders
 	mapping (uint => MarketOrder) public marketOrders;
 
+	event myNewMarketOrder (address indexed _from);
+	event myNewMarketOrderWithlisted (address indexed _from);
 	event newMarketOrder (uint tokenId);
 	event newMarketOrderWithlisted (uint tokenId);
 	event soldMade(uint tokenId);
 	event soldMadeWhitelisted(uint tokenId);
-	event orderCanceled(uint tokenId);
+	event orderCanceled(uint tokenId, address indexed _from);
+	event moneyWithdrawn(uint amount, address indexed _from);
 
     ///@dev Get a list of all the owners by continent of items. On the front this will make a rank
 	function getRankByContinent(uint _numContinent) public view returns(address[] memory) {
@@ -108,6 +111,7 @@ contract marketPlace is unlockItems{
 		items[_idItemSold].onSold = true;
 		
 		emit newMarketOrder (_idItemSold);
+		emit myNewMarketOrder (msg.sender);
 	}
     
     ///@dev Allows owners to set a whitelisted market order
@@ -122,6 +126,7 @@ contract marketPlace is unlockItems{
 		items[_idItemSold].onSold = true;
 		
 		emit newMarketOrderWithlisted(_idItemSold);
+		emit myNewMarketOrderWithlisted(msg.sender);
 	}
 	
 	///@dev Allows anyone to buy an existing selling  
@@ -133,8 +138,9 @@ contract marketPlace is unlockItems{
 		items[_idOrder].onSold = false;
 
 		balancePlayer[ownerOf(_idOrder)] = balancePlayer[ownerOf(_idOrder)] + msg.value;
-		_transfer(ownerOf(_idOrder),msg.sender, _idOrder);
 		_endOrder(_idOrder);
+		_transfer(ownerOf(_idOrder),msg.sender, _idOrder);
+		
 
 		emit soldMade(_idOrder);
 	}
@@ -144,13 +150,14 @@ contract marketPlace is unlockItems{
 		require(!marketOrders[_idOrder].active, "this order is in the open market");
 		require(orderWithWithelist[_idOrder].active, "This address doesn't exist" );
 		require(orderWithWithelist[_idOrder].whitelistAddress == msg.sender , "Not the selected reiceiver");
-		require(msg.value == (marketOrders[_idOrder].priceRequested * base), "price not exact");
+		require(msg.value == (orderWithWithelist[_idOrder].priceRequested * base), "price not exact");
 
 		items[_idOrder].onSold = false;
 
 		balancePlayer[ownerOf(_idOrder)] = balancePlayer[ownerOf(_idOrder)] + msg.value;
-		_transfer(ownerOf(_idOrder),msg.sender, _idOrder);
 		_endOrder(_idOrder);
+		_transfer(ownerOf(_idOrder),msg.sender, _idOrder);
+		
 
 		emit soldMadeWhitelisted(_idOrder);
 	}
@@ -163,7 +170,7 @@ contract marketPlace is unlockItems{
 
 		 _endOrder(_idOrder);
 
-		emit orderCanceled(_idOrder);
+		emit orderCanceled(_idOrder, msg.sender);
 	}
 	
 	///@dev End an order
@@ -176,8 +183,10 @@ contract marketPlace is unlockItems{
     ///@dev Allows the seller withdraw all his money from selling
 	function withdrawAmount() public {
 		require (balancePlayer[msg.sender] != 0, "nothing to withdraw");
+		uint amount = balancePlayer[msg.sender];
 		(bool success, ) = msg.sender.call{value: balancePlayer[msg.sender]}("");
       	require(success, 'transfer failed');
       	balancePlayer[msg.sender] = 0;
+      	emit moneyWithdrawn(amount, msg.sender);
 	}
 }

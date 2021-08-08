@@ -8,8 +8,8 @@ const TabOrderOnWhitelisted = ({entryTab}) => {
 		
 		return(
 			<tr key={Tab.idItem}>
-				<td> {Tab.idItem} </td>
-				<td> {Tab.name} </td>
+				<td>{Tab.idItem} </td>
+				<td>{Tab.name} </td>
 				<td>{Tab.priceRequested} ETH</td>
 				<td>{Tab.level}</td>
 				<td>{Tab.whitelistAddress}</td>

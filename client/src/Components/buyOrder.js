@@ -4,23 +4,31 @@ import SimpleSearchBarMarketBuyOrder from './simpleSearchBarMarketBuyOrder';
 import TabOrderOn from './tabOrderOn';
 
 
-const BuyOrder = ({currentMarketOrders,getOrder,setCurrentMarketOrders, updateTabOrder}) => {
+const BuyOrder = ({ updateScreenMarketOrder,UpdateETHAccount,currentMarketOrders,getOrder,setCurrentMarketOrders, updateTabOrder, accounts, setTabOrder}) => {
 
 	useEffect(() => {
 
 		updateTabOrder();
-		/*
-		return () => {
-      		updateTabOrder();
-    	};*/
+		
+		
 
-	},[])
+	},[updateScreenMarketOrder])
+
+	const requestUpdadte = () =>{
+		UpdateETHAccount();
+		updateTabOrder();
+	}
+
 	
 
 	return (
 
 		<div style = {{textAlign:'center', paddingTop:'100px' }}>
 			<div className="ui raised very padded text container segment">
+				<div className="ui green mini compact message " style = {{fontSize : "10px", color : "black"}} >
+				  <p>Current address :{accounts}</p>
+				</div>
+				<h1 className ="ui header huge" style = {{paddingBottom:'40px' }}> Buy Open order</h1>
 				<div className="ui tabular menu">
 				  <Link href = "/marketplace/buyOrder" className="active item">
 				    Open Market
@@ -36,6 +44,9 @@ const BuyOrder = ({currentMarketOrders,getOrder,setCurrentMarketOrders, updateTa
 					textButton1 = "Buy"
 					textButton2 = "Back"
 					functionToCall = {getOrder}
+					functionToCall2 = {setTabOrder}
+					functionToCall3 = {requestUpdadte}
+					textButton3 = "Update list"
 					/>
 					<div style = {{ paddingTop:'30px' }}>
 						<h2 style = {{textAlign:'left'}}>Open Orders</h2>

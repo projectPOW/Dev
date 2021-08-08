@@ -6,13 +6,13 @@ import SearchBar from "./searchBar";
 
 
 
-const Unlock = ({entryTab, getLockedItems, unlock}) => {
+const Unlock = ({updateScreenUnlock,entryTab, getLockedItems, unlock, accounts}) => {
 
 	useEffect(() => {
 
 		getLockedItems();
 
-	},[] )
+	},[updateScreenUnlock] )
 
 
 	const onClick = (event) => {
@@ -32,38 +32,48 @@ const Unlock = ({entryTab, getLockedItems, unlock}) => {
 
 
 	return (
-		<div className="ui raised very padded text container segment" style = {{textAlign:'center', marginTop:'100px' }}> 
-			<div>
-				<div className="ui inverted top attached tabular menu">
-				  <Link href = "/admin/unlock" className={`item ${activeUnlock}`}>
-				    Unlock Items 
-				  </Link>
-				  <Link href = "/admin/lock"  className={`item ${activeLock}`}>
-				    Lock Item
-				  </Link>
-				  <Link href = "/admin/rewardLevel"  className={`item ${activeLock}`}>
-				    Set level reward
-				  </Link>
+		<div style = {{textAlign:'center', paddingTop:'100px' }}>
+			<div className="ui raised very padded text container segment" > 
+				<div>
+					<div className="ui green mini compact message " style = {{fontSize : "10px", color : "black"}} >
+					  <p>Current address :{accounts}</p>
+					</div>
+					<h1 className = "ui  huge header"  style = {{textAlign:'center', marginBottom:'50px' }} >Unlock Item</h1>
+					<div className="ui tabular menu">
+					  <Link href = "/admin/unlock" className={`item ${activeUnlock}`}>
+					    Unlock Items 
+					  </Link>
+					  <Link href = "/admin/lock"  className={`item ${activeLock}`}>
+					    Lock Item
+					  </Link>
+					  <Link href = "/admin/rewardLevel"  className={`item ${activeSetReward}`}>
+					    Set level reward
+					  </Link>
+					</div>	
+				</div>
+				<div style = {{ marginTop:"30px"}}>
+					<SearchBar
+					textToEnter = "Entrer an Id token to unlock"
+					textButton = "Unlock"
+					holder = "Enter an ID"
+					functionToCall = {unclockItem}
+					/>	
 				</div>	
+
+				<div style = {{ textAlign:'center'}}>
+			 		<DoubleButtonActionBack
+					function1= {onClick}
+					backPath= "/admin"
+					textButton = "Update List"
+					textBack = "Back"
+					/>				
+				</div>		
+				<div>
+					<TabLockedItems
+					entryTab = {entryTab}
+					/>
+				</div>
 			</div>
-			<div>
-				<TabLockedItems
-				entryTab = {entryTab}
-				/>
-			</div>
-			<div style = {{ textAlign:'center', marginBottom:'50px'}}>
-		 		<DoubleButtonActionBack
-				function1= {onClick}
-				backPath= "/admin"
-				textButton = "Update List"
-				textBack = "Back"
-				/>
-			</div>
-			<SearchBar
-				textButton = "Unlock item"
-				holder = "Enter an ID"
-				functionToCall = {unclockItem}
-				/>
 		</div>
 	);
 

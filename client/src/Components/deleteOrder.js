@@ -4,13 +4,13 @@ import SimpleSearchBarMarketOrderCancel from './simpleSearchBarMarketOrderCancel
 import TabUnlockedItems from "./tabUnlockedItems";
 
 
-const DeleteOrder = ({cancelOrder,getMyItemsInCurrentOrder, setDataMyItemInCurrentOrder, dataMyItemInCurrentOrder }) => {
+const DeleteOrder = ({updateCancelScreen,cancelOrder,getMyItemsInCurrentOrder, setDataMyItemInCurrentOrder, dataMyItemInCurrentOrder,accounts }) => {
 	
 	useEffect(() => {
 
 		getMyItemsInCurrentOrder();
 		
-	},[])
+	},[updateCancelScreen])
 
 	const onClick = (tokenId) => {
 
@@ -26,6 +26,10 @@ const DeleteOrder = ({cancelOrder,getMyItemsInCurrentOrder, setDataMyItemInCurre
 	return (
 		<div style = {{textAlign:'center', paddingTop:'100px' }}>
 			<div className="ui raised very padded text container segment">
+				<div className="ui green mini compact message " style = {{fontSize : "10px", color : "black"}} >
+				  <p>Current address :{accounts}</p>
+				</div>
+				<h1 className ="ui header huge" style = {{paddingBottom:'40px' }}> Cancel Order</h1>
 				<div className="ui tabular menu">
 				  <Link href = "/marketplace/manageOrder" className="item">
 				    Create Order Open

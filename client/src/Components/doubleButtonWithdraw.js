@@ -1,11 +1,11 @@
 import React from "react";
 
 
-const DoubleButton = ({textButton1, textButton2, function1, function2}) => {
+const DoubleButtonWithdraw = ({textButton1, textButton2, function1, function2}) => {
 
 	const onClick1 = (event) => {
 			event.preventDefault();
-			function1(event);
+			function1();
 		}
 
 	const onClick2 = (event) => {
@@ -26,4 +26,4 @@ const DoubleButton = ({textButton1, textButton2, function1, function2}) => {
 	); 
 }
 
-export default DoubleButton;
+export default DoubleButtonWithdraw;

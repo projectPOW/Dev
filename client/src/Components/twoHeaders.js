@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React from 'react';
 
 
 const TwoHeaders = ({viewSet, viewUpdate}) => {
@@ -17,9 +17,9 @@ const TwoHeaders = ({viewSet, viewUpdate}) => {
 	}
 
 	return (
-		<div className="ui two item menu">
-		  <a className="item" onClick = {onClick1} >Set</a>
-		  <a className="item" onClick = {onClick2}>Update</a>
+		<div className="ui tabular menu">
+		  <button className="item" onClick = {onClick1} >Set</button>
+		  <button className="item" onClick = {onClick2}>Update</button>
 		</div>
 	);
 

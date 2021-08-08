@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import BackButtonCleanningClose from "./backButtonCleaningClose";
-import Link from "./link"
+
 
 const SimpleSearchBarMarketOrderCancel = ({title1 ,holder1,  functionToCall,textButton1, textButton2, functionToCall2}) => {
 

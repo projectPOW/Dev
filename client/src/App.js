@@ -1,3 +1,4 @@
+import Background from "./Components/img/Background.png";
 import React, { useState, useEffect } from "react";
 import POW_NFT from "./contracts/marketPlace.json";
 import POW_FONG from "./contracts/POWToken.json";
@@ -22,47 +23,116 @@ import BuyOrder from './Components/buyOrder';
 import DeleteOrder from "./Components/deleteOrder";
 import ManageOrderOpen from "./Components/manageOrderOpen";
 import BuyOrderWhitelisted from './Components/buyOrderWhitelisted';
+import SetUpPlayer from "./Components/setUpPlayer";
+import UpdatePlayer from "./Components/updatePlayer";
+import GetBalance from "./Components/getBalance";
+
 
 
 const App = () => {
 
+  //Usestate for initialisation
   const [web3,setWeb3]= useState(null);
   const [accounts,setAccounts]=useState(null);
   const [contract,setContract]=useState(null);
   const [contract2,setContract2]=useState(null);
-  const [rewardNFT,setRewardNFT] = useState('');
-  const [rewardFONG,setRewardFONG] = useState(false);
-  const [proposalTab,setProposalTab] = useState ([]);
-  const [voteVoter,setVoteVoter] = useState (null);
-  const [winner,setWinner] = useState ([]);
-  const [dataNftPlayer, setDataNftPlayer] = useState (0);
-  const [dataFongPlayer, setDataFongPlayer] = useState (0);
-  const [objectToCreate, setObjectToCreate] = useState(0);
-  const [continentWhereToFind,setContinentWhereToFind] = useState(0);
-  const [lockedItems, setLockedItems] = useState([]);
-  const [rewardEarned,setRewardEarned] = useState([]);
-  const [unlockedItemsTab, setUnlockedItemsTab] = useState ([]); 
-  const [lockedItemsTab, setLockedItemsTab] = useState([]);
-  const [eventWithdrawCrypto, setEventWithdrawCrypto] = useState(false);
-  const [eventNewMergedItem, setEventNewMergedItem] = useState([])
-  const [idMergedItem,setIdMergedItem] = useState (0);
-  const [tabRank, setTabRank] = useState([]);
-  const [tabItemOwner, setTabItemOwner] = useState([]);
-  const [tabOrder, setTabOrder] = useState([]);
-  const [newOrderId, setNewOrderId] = useState(null);
-  const [dataMyItemInOrder, setDataMyItemInOrder] = useState([]);
-  const [dataMyItemInCurrentOrder, setDataMyItemInCurrentOrder] = useState([]);
   const [admin,setAdmin] = useState(null);
-  const [currentMarketOrders, setCurrentMarketOrders] = useState([]);
-  const [newOrderIdWhitelisted, setNewOrderIdWhitelisted] = useState(null);
-  const [currentWhitelistedMarketOrders, setCurrentWhitelistedMarketOrders] = useState([]);
+
+  //Array containing names of Nft items earned
+  const [rewardEarned,setRewardEarned] = useState([]);
+
+  //Indicate a withdrawn made in ERC20 side
+  const [eventWithdrawCrypto, setEventWithdrawCrypto] = useState(false);
+
+  //Data of player on NFT side
+  const [dataNftPlayer, setDataNftPlayer] = useState (0);
+
+  //Data of player on ERC20 side
+  const [dataFongPlayer, setDataFongPlayer] = useState (0);
+
+  //Type of item to create
+  const [objectToCreate, setObjectToCreate] = useState(0);
+
+  //The value of the continent for the new item
+  const [continentWhereToFind,setContinentWhereToFind] = useState(0);
+
+  //Array on data's items of the current address 
+  const [unlockedItemsTab, setUnlockedItemsTab] = useState ([]); 
+
+  //Array of all the locked items
+  const [lockedItemsTab, setLockedItemsTab] = useState([]);
+
+  //Data on the new merged Item
+  const [eventNewMergedItem, setEventNewMergedItem] = useState([]);
+
+  //Token Id of the new merged item
+  const [idMergedItem,setIdMergedItem] = useState (0);
+
+  //Array of rank by continent 
+  const [tabRank, setTabRank] = useState([]);
+
+  //Array of data on all the items owned by someone. Access in the market place
+  const [tabItemOwner, setTabItemOwner] = useState([]);
+
+  //Array containing all the open orders made
+  const [tabOrder, setTabOrder] = useState([]);
+
+  //Array containing all the whitelisted orders made
   const [tabOrderWhitelisted, setTabOrderWhitelisted] = useState([]);
+
+  //Array of all the current open orders made
+  const [currentMarketOrders, setCurrentMarketOrders] = useState([]);
+
+  //Array of all the current whitelisted orders made
+  const [currentWhitelistedMarketOrders, setCurrentWhitelistedMarketOrders] = useState([]);
+  
+  //Id of the the new whitelisted order. This function request for an udpate of the array
+  const [newOrderId, setNewOrderId] = useState(null);
+
+  //Id of the the new whitelisted order. This function request for an udpate of the array
+  const [newOrderIdWhitelisted, setNewOrderIdWhitelisted] = useState(null);
+  
+  //Array of datas about token owned by the current address and not in sale
+  const [dataMyItemInOrder, setDataMyItemInOrder] = useState([]);
+
+  //Array of data currently on sale and owned by the current address 
+  const [dataMyItemInCurrentOrder, setDataMyItemInCurrentOrder] = useState([]);
+
+  //Balance of player 
+  const [balanceOfPlayer, setBalanceOfPlayer] = useState(0);
+
+
+  //Update cancel screen 
+  const [updateCancelScreen, setUpdateCancelScreen] = useState(false);
+
+  //Update unlock screen 
+  const [updateScreenUnlock, setUpdateScreenUnlock] = useState(false);
+
+   //Update Lock screen 
+  const [updateScreenLock, setUpdateScreenLock] = useState(false);
+
+  //Update my screen market order 
+  const [updateMyScreenMarketOrder, setUpdateMyScreenMarketOrder] = useState(false);
+
+   //Update my screen market order whitelisted
+  const [updateMyScreenMarketOrderWhitelisted, setUpdateMyScreenMarketOrderWhitelisted] = useState(false);
+
+  //Update market order  
+  const [updateScreenMarketOrder, setUpdateScreenMarketOrder] = useState(false);
+
+  //Update market order whitelisted 
+  const [updateScreenMarketOrderWhitelisted, setUpdateScreenMarketOrderWhitelisted] = useState(false);
+
+  //Update money withrawn
+  const [updateMoneyWithdrawn, setUpdateMoneyWithdrawn] = useState(false);
+
+
 
 
 
   useEffect ( () => {
 
-   
+  
     const initWeb3 = async () =>{
       try{
         const web3 = await getWeb3();
@@ -93,12 +163,11 @@ const App = () => {
           .on("data", (event) => {
         }).on("error", console.error);
 
-          instance.events.rewardWithdrawn()
+          instance.events.rewardWithdrawn({ filter: { _to: `${accounts[0]}` } })
           .on("data", (event) => {
 
           setRewardEarned((rewardEarned) =>{ return [...rewardEarned, event.returnValues['tokenName']];});
           console.log("call");
-
         }).on("error", console.error);
 
            instance2.events.rewardWithdrawn()
@@ -123,61 +192,23 @@ const App = () => {
           instance.events.newMarketOrder()
           .on("data", (event) => {
             setNewOrderId(event.returnValues);
-            console.log("click");
+           
+            setUpdateScreenMarketOrder(updateScreenMarketOrder => !updateScreenMarketOrder);
             
-
         }).on("error", console.error);
 
-          let intTab11 = [];
-
-          instance.getPastEvents("newMarketOrder", { fromBlock: 0, toBlock: "latest" },
-           function(error, event){ 
-
-            for (let i= 0 ; i<event.length;i++){
-
-              intTab11.push(event[i].returnValues.tokenId);
-
-            }
-
-            const cleanTab = [...new Set(intTab11)];
-            setTabOrder(cleanTab);
-            })
-          .then(function(event) {
           
-            console.log(tabOrder);
-            //test(cleanTab);
-            // `events` est un tableau d'objets `event` pour lequel nous pouvons itérer, comme nous l'avons fait ci-dessus
-            // Ce code donnera une liste de tous les zombies créés
-          });
 
           instance.events.newMarketOrderWithlisted()
           .on("data", (event) => {
 
             setNewOrderIdWhitelisted(event.returnValues);
 
+            setUpdateScreenMarketOrderWhitelisted(updateScreenMarketOrderWhitelisted => !updateScreenMarketOrderWhitelisted)
+
         }).on("error", console.error);
 
-          let intTab22 = [];
-
-          instance.getPastEvents("newMarketOrder", { fromBlock: 0, toBlock: "latest" },
-           function(error, event){ 
-
-            for (let i= 0 ; i<event.length;i++){
-
-              intTab22.push(event[i].returnValues.tokenId);
-
-            }
-
-            const cleanTab = [...new Set(intTab22)];
-            setTabOrderWhitelisted(cleanTab);
-            })
-          .then(function(event) {
           
-            console.log(tabOrderWhitelisted);
-            //test(cleanTab);
-            // `events` est un tableau d'objets `event` pour lequel nous pouvons itérer, comme nous l'avons fait ci-dessus
-            // Ce code donnera une liste de tous les zombies créés
-          });
 
           instance.events.soldMade()
           .on("data", (event) => {
@@ -187,9 +218,55 @@ const App = () => {
           .on("data", (event) => {
         }).on("error", console.error);
 
-          instance.events.orderCanceled()
-          .on("data", (event) => {
+          instance.events.orderCanceled({ filter: { _from: `${accounts[0]}` } })
+          .on("data", () => {
+
+            setUpdateCancelScreen(updateCancelScreen => !updateCancelScreen);
+       
+
         }).on("error", console.error);
+
+
+          instance.events.newItemUnlock()
+          .on("data", () => {
+
+            setUpdateScreenUnlock(updateScreenUnlock => !updateScreenUnlock);
+           
+
+        }).on("error", console.error);
+
+          instance.events.newItemLock()
+          .on("data", () => {
+
+            setUpdateScreenLock(updateScreenLock => !updateScreenLock);
+          
+
+        }).on("error", console.error);
+
+           instance.events.myNewMarketOrder({ filter: { _from: `${accounts[0]}` } })
+          .on("data", () => {
+
+            setUpdateMyScreenMarketOrder(updateMyScreenMarketOrder => !updateMyScreenMarketOrder);
+    
+
+        }).on("error", console.error);
+
+          instance.events.myNewMarketOrderWithlisted({ filter: { _from: `${accounts[0]}` } })
+          .on("data", () => {
+
+            setUpdateMyScreenMarketOrderWhitelisted(updateMyScreenMarketOrderWhitelisted => !updateMyScreenMarketOrderWhitelisted);
+           
+
+        }).on("error", console.error);
+
+          instance.events.moneyWithdrawn({ filter: { _from: `${accounts[0]}` } })
+          .on("data", () => {
+
+            setUpdateMoneyWithdrawn(updateMoneyWithdrawn => !updateMoneyWithdrawn);
+           
+        }).on("error", console.error);
+
+
 
            instance2.events.NewPlayerRegistered()
           .on("data", (event) => {
@@ -223,28 +300,33 @@ const App = () => {
       }
     }
       initWeb3();
+      //getPlayerDataNFT();
+      //getPlayerDataFONG();
+  },[accounts,newOrderId,newOrderIdWhitelisted, window.location.pathname]);
 
-      return () =>{
-        setRewardNFT('');
-      }
-      
-  },[accounts,newOrderId,newOrderIdWhitelisted]);
+ /************************************/
+
+
+
+
+
 
   /***********Helper function***********/
+
+  // Update the ETH account
   const UpdateETHAccount = async() =>{
     try{
       const accounts = await web3.eth.getAccounts();
       setAccounts(accounts);
     }catch (error){
         console.log(error);
-        alert('Error: check the address');
       }
   }
 
+  // Get the data of the current player side NFT 
   const getPlayerDataNFT = async() => {
     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
+     
       const data = await contract.methods.multiverseData(accounts[0]).call();
       setDataNftPlayer(data);
     }catch(error){
@@ -252,10 +334,10 @@ const App = () => {
     }
   }
 
+  // Get the data of the current player side ERC20
   const getPlayerDataFONG = async() => {
     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
+     
       const data = await contract2.methods.multiverseData(accounts[0]).call();
       setDataFongPlayer(data);
     }catch(error){
@@ -263,299 +345,8 @@ const App = () => {
     }
   }
 
-
-
-  /***********Contract call***********/
-  
-  const setMultiversePlayerNFT = async(address,login) => {
-    try{
-      UpdateETHAccount()
-      await contract.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
-    }catch (error){
-        console.log(error);
-      }
-  }
-
-  const setMultiversePlayerFONG = async(address,login) => {
-    try{
-      UpdateETHAccount()
-      await contract2.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
-    }catch (error){
-        console.log(error);
-      }
-  }
-
-  const updateMultiversePlayerNFT = async(login,caseLv1,caseLv2) => {
-    
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.updateMultiversePlayer(login,caseLv1,caseLv2).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-    }
-  }
-
-  const updateMultiversePlayerFONG = async(login,XP) => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract2.methods.updateMultiversePlayer(login,XP).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-    }
-  }
-
-  const createItem = async(type, name, continent) => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.createItem(type, name, continent).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-    }
-  }
-
-  const getRewardNFT = async() => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.getReward().send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const getRewardFONG = async () => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract2.methods.getReward().send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-    
-  const fusionItem = async(tokenId1,tokenId2) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.fusionItem(tokenId1,tokenId2).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const getLockedItems = async() => {
-    try{
-      const TablockItem = []
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      const lockedTab = await contract.methods.getLockedItems().call({from: accounts[0]});
-      getDataItemLocked(lockedTab);
-    }catch(error){
-      console.log(error);
-      alert(error.message.reason);
-    }
-  }
-
-  const unlock = async (tokenId) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.unlock(tokenId).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const lock = async (tokenId) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.lock(tokenId).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const getRankByContinent = async (continentNum) => {
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      const tabInt = await contract.methods.getRankByContinent(continentNum).call();
-      makeRank(tabInt);
-  }
-
-  const getItemsOfPlayer = async (address) => {
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-     const returnTab = await contract.methods.getItemsOfPlayer(address).call();
-     getDataItemUnlockedOwner(returnTab);
-  }
-
-  const getMyItems = async () => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
-      getDataItemUnlocked(returnTab);
-      }catch(error){
-      console.log(error);
-    }
-  }
-
-  const getMyItemsInOrder = async () => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
-      getDataItemInOrder(returnTab);
-      }catch(error){
-      console.log(error);
-    }
-  }
-
-  const getMyItemsInCurrentOrder = async () => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
-      getDataItemInCurrentOrder(returnTab);
-      }catch(error){
-      console.log(error);
-    }
-  }
-
-  const setMarketOrder = async (amount, tokenId) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.setMarketOrder(amount,tokenId).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-    }
-  }
-
-  const setMarketOrderWhitelisted = async (amount, tokenId, address) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.setMarketOrderWhitelisted(amount, tokenId, address).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const getOrder = async (orderId) => {
-
-    const accounts = await web3.eth.getAccounts();
-    setAccounts(accounts);
-     
-   let check = await contract.methods.marketOrders(orderId).call({from: accounts[0]});
-
-   var etherAmount = check.priceRequested;
-   web3.eth.sendTransaction({from:accounts[0],data:web3.eth.abi.encodeFunctionSignature('getOrder(orderId)'), value:web3.utils.toWei(etherAmount ,"ether" )}) 
- 
-  }
-
-  const getWhitelistedOrder = async (orderId) => {
-
-    const accounts = await web3.eth.getAccounts();
-    setAccounts(accounts);
-
-   let check2 = await contract.methods.orderWithWithelist(orderId).call({from: accounts[0]});
-    
-   var etherAmount = check2.priceRequested;
-   web3.eth.sendTransaction({from:accounts[0],data:web3.eth.abi.encodeFunctionSignature('getWhitelistedOrder(orderId)'), value:web3.utils.toWei(etherAmount ,"ether" )}) 
-  }
-
-  const cancelOrder = async (orderId) => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract.methods.cancelOrder(orderId).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const myMint = async (address,amount) => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract2.methods.withdrawAmount(address,amount).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const burnPow = async (address,amount) => {
-    try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract2.methods.burnPow(address,amount).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const setReward = async (amount) => {
-     try{
-      const accounts = await web3.eth.getAccounts();
-      setAccounts(accounts);
-      await contract2.methods.setReward(amount).send({from: accounts[0]});
-    }catch(error){
-      console.log(error);
-      alert('Error transaction');
-    }
-  }
-
-  const getDataItemUnlocked = async(TabTokenId) => {
-    const tabInt = [];
-    const tabData = [];
-
-    for (let i = 0; i < TabTokenId.length ; i++){
-
-      tabInt[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
-      if (!tabInt[i].locked){
-        tabData[i] = tabInt[i]
-      }
-    } 
-    setUnlockedItemsTab(tabData);
-    console.log(unlockedItemsTab);
-  }
-
-  const getDataItemUnlockedOwner = async(TabTokenId) => {
-    const tabData = [];
-
-    for (let i = 0; i < TabTokenId.length ; i++){
-
-      tabData[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
-      
-    } 
-    setTabItemOwner(tabData);
-    
-    console.log(tabItemOwner);
-  }
-
-  const getDataItemMerged = async() => {
-    
-    const tabData = await contract.methods.items(idMergedItem).call({from: accounts[0]});
-    setEventNewMergedItem(tabData); 
-    console.log(tabData);
-    console.log(eventNewMergedItem);   
-  }
-
- const getDataItemLocked = async(TabTokenId) => {
+  //Get the data off all items locked
+  const getDataItemLocked = async(TabTokenId) => {
     const tabData = [];
 
     for (let i = 0; i < TabTokenId.length ; i++){
@@ -564,16 +355,14 @@ const App = () => {
      
     } 
     setLockedItemsTab(tabData);
-    console.log(lockedItemsTab);
   }
 
-  
-
+  // Make a rating of an array with address. This fonction comes with the function "getRankByContinent"
   const  makeRank = (arr) => {
 
       var result2 = [];
-
       var counts = {};
+      
       arr.forEach(function(num) {
           if (!(num in counts)) {
               counts[num] = 0;
@@ -588,56 +377,12 @@ const App = () => {
       for (var j = 0; j < result.length; j++){
 
         result2.push(result[j]);
-
       }
-
       setTabRank(result2);
-      console.log(result);
   }
 
-  const updateTabOrder = async() => {
-
-    let tabInte = [];
-    if (tabOrder != []){
-      for (let k = 0; k < tabOrder.length; k++ ){
-
-        let check = await contract.methods.marketOrders(k).call({from: accounts[0]});
-        let check2 = await contract.methods.orderWithWithelist(k).call({from: accounts[0]});
-
-        if(check.active && !check2.active ){
-          tabInte.push(check);
-        }
-      }
-    }
-
-    setCurrentMarketOrders(tabInte);
-  }
-
-  const updateTabOrderWhitelisted = async() => {
-
-    let tabInte = [];
-    if (tabOrderWhitelisted != []){
-      for (let k = 0; k < tabOrderWhitelisted.length; k++ ){
-
-        let check = await contract.methods.marketOrders(k).call({from: accounts[0]});
-        let check2 = await contract.methods.orderWithWithelist(k).call({from: accounts[0]});
-
-        if(!check.active&&check2.active){
-          tabInte.push(check2);
-        }
-      }
-    }
-    setCurrentWhitelistedMarketOrders(tabInte);
-  }
-
-
-
-  const test = (tab) =>{
-
-    console.log(tab);
-  }
-
-  const getDataItemInOrder = async(TabTokenId) => {
+  //Get Data of items own by a player in the market place
+  const getDataItemUnlockedOwner = async(TabTokenId) => {
     const tabData = [];
 
     for (let i = 0; i < TabTokenId.length ; i++){
@@ -645,11 +390,25 @@ const App = () => {
       tabData[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
       
     } 
-    setDataMyItemInOrder(tabData);
-    
-    console.log(dataMyItemInOrder);
+    setTabItemOwner(tabData);
   }
 
+  // Get data on items of the current address and get all the unlock Item 
+  const getDataItemUnlocked = async(TabTokenId) => {
+    const tabInt = [];
+    const tabData = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      tabInt[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+      if (!tabInt[i].locked){
+        tabData[i] = tabInt[i]
+      }
+    } 
+    setUnlockedItemsTab(tabData);
+  }
+
+  //Get data of items owned and currently on sold
   const getDataItemInCurrentOrder = async(TabTokenId) => {
     const tabData = [];
     const tabInt = [];
@@ -659,18 +418,442 @@ const App = () => {
       tabInt[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
         if(tabInt[i].onSold){
           tabData.push(tabInt[i]);
-        }
-      
+        }    
     } 
-    setDataMyItemInCurrentOrder(tabData);
+    setDataMyItemInCurrentOrder(tabData);    
+  }
+
+   //Get data on new merged Item
+  const getDataItemMerged = async() => {
     
-    console.log(dataMyItemInCurrentOrder);
+    const tabData = await contract.methods.items(idMergedItem).call({from: accounts[0]});
+    setEventNewMergedItem(tabData); 
+  }
+
+   //Make an array of Items owner by the current account and not on sold
+  const getDataItemInOrder = async(TabTokenId) => {
+    const tabData = [];
+    const int = [];
+
+    for (let i = 0; i < TabTokenId.length ; i++){
+
+      int[i] = await contract.methods.items(TabTokenId[i]).call({from: accounts[0]});
+      if (!int[i].onSold){
+
+        tabData.push(int[i]);
+      }    
+    } 
+    setDataMyItemInOrder(tabData);
   }
 
 
+  //Update the array of current whitelisted order
+  const updateTabOrderWhitelisted = async() => {
 
+    if (contract != null) {
+    /////////////////////////////////////////////
+
+      let intTab22 = [];
+
+            contract.getPastEvents("newMarketOrderWithlisted", { fromBlock: 0, toBlock: "latest" },
+             function(error, event){ 
+
+              for (let i= 0 ; i<event.length;i++){
+
+                intTab22.push(event[i].returnValues.tokenId);
+
+              }
+              const cleanTab = [...new Set(intTab22)];
+              setTabOrderWhitelisted(cleanTab);
+              })
+            .then(function(event) {
+                        
+            });
+
+      /////////////////////////////////////////////////
+
+      let tabInte = [];
+      if (tabOrderWhitelisted != []){
+        for (let k = 0; k < tabOrderWhitelisted.length; k++ ){
+
+          let check = await contract.methods.marketOrders(tabOrderWhitelisted[k]).call({from: accounts[0]});
+          let check2 = await contract.methods.orderWithWithelist(tabOrderWhitelisted[k]).call({from: accounts[0]});
+
+          if(!check.active&&check2.active){
+            tabInte.push(check2);
+          }
+        }
+      }
+      setCurrentWhitelistedMarketOrders(tabInte);
+    }
+  }
+
+   //Update the array of current open order
+  const updateTabOrder = async() => {
+
+    if (contract != null) {
+    ////////////////////////////////////////////
+
+      let intTab11 = [];
+
+            contract.getPastEvents("newMarketOrder", { fromBlock: 0, toBlock: "latest" },
+             function(error, event){ 
+
+              for (let i= 0 ; i<event.length;i++){
+
+                intTab11.push(event[i].returnValues.tokenId);
+              }
+              const cleanTab = [...new Set(intTab11)];
+              setTabOrder(cleanTab);
+              })
+            .then(function(event) {
+                          
+            });
+
+
+      ///////////////////////////////////////////
+
+      let tabInte = [];
+      if (tabOrder != []){
+        for (let k = 0; k < tabOrder.length; k++ ){
+
+          let check = await contract.methods.marketOrders(tabOrder[k]).call({from: accounts[0]});
+          let check2 = await contract.methods.orderWithWithelist(tabOrder[k]).call({from: accounts[0]});
+
+          if(check.active && !check2.active ){
+            tabInte.push(check);
+          }
+        }
+      }
+
+      setCurrentMarketOrders(tabInte);
+    }
+  }
+
+  const getBalancePlayer = async() =>{
+
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const balance = await contract.methods.balancePlayer(accounts[0]).call({from: accounts[0]});
+      setBalanceOfPlayer(balance);
+      }catch(error){
+      console.log(error);
+    } 
+  }
 
 /************************************/
+
+
+
+
+
+  /***********Contract call***********/
+  
+  // Set a player on NFT side
+  const setMultiversePlayerNFT = async(address,login) => {
+    try{
+      UpdateETHAccount();
+      await contract.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
+    }catch (error){
+        console.log(error);
+      }
+  }
+
+  // Set a player on ERC20 side
+  const setMultiversePlayerFONG = async(address,login) => {
+    try{
+      UpdateETHAccount()
+      await contract2.methods.setMultiversePlayer(address,login).send({from: accounts[0]});
+    }catch (error){
+        console.log(error);
+      }
+  }
+
+  //Update data of player on NFT side
+  const updateMultiversePlayerNFT = async(login,caseLv1,caseLv2) => {
+    
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.updateMultiversePlayer(login,caseLv1,caseLv2).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //Update data of player on ERC20 side
+  const updateMultiversePlayerFONG = async(login,XP) => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.updateMultiversePlayer(login,XP).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  // Create an item on NFT side
+  const createItem = async(type, name, continent) => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.createItem(type, name, continent).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //Convert case in item NFT side. Generate an event rewardWithdrawn 
+  const getRewardNFT = async() => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.getReward().send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  //Convert XP in ERC20. Generates an event rewardWithdrawn
+  const getRewardFONG = async () => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.getReward().send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      
+    }
+  }
+   
+   //Fusion Item on NFT side  
+  const fusionItem = async(tokenId1,tokenId2) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.fusionItem(tokenId1,tokenId2).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      
+    }
+  }
+
+  //Get an array of token Id owned by the current account. Only admin function
+  const getLockedItems = async() => {
+    try{
+      const TablockItem = []
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const lockedTab = await contract.methods.getLockedItems().call({from: accounts[0]});
+      getDataItemLocked(lockedTab);
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  // Unlock an item
+  const unlock = async (tokenId) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.unlock(tokenId).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  // Lock an item
+  const lock = async (tokenId) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.lock(tokenId).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  // Get an array of ETH address possesing token on a specify continent
+  const getRankByContinent = async (continentNum) => {
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const tabInt = await contract.methods.getRankByContinent(continentNum).call();
+      makeRank(tabInt);
+  }
+
+  // Get an array of token Id owned player. Access from the market place viewer
+  const getItemsOfPlayer = async (address) => {
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+     const returnTab = await contract.methods.getItemsOfPlayer(address).call();
+     getDataItemUnlockedOwner(returnTab);
+  }
+
+  //Get an array of token Id owned by the current address and send them to sort Unlocked
+  const getMyItems = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
+      getDataItemUnlocked(returnTab);
+      }catch(error){
+      console.log(error);
+    }
+  }
+
+  //Get an array of token Id owned by the current address and send them to sort
+  const getMyItemsInOrder = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
+      getDataItemInOrder(returnTab);
+      }catch(error){
+      console.log(error);
+    }
+  }
+
+  //Get an array of token Id owned by the current address and send them to sort onSale
+  const getMyItemsInCurrentOrder = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      const returnTab = await contract.methods.getItemsOfPlayer(accounts[0]).call();
+      getDataItemInCurrentOrder(returnTab);
+      }catch(error){
+      console.log(error);
+    }
+  }
+
+  //Set an open market order
+  const setMarketOrder = async (amount, tokenId) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.setMarketOrder(amount,tokenId).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+  //Set a whitelisted market order
+  const setMarketOrderWhitelisted = async (amount, tokenId, address) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.setMarketOrderWhitelisted(amount, tokenId, address).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  //Buy an open order
+  const getOrder = async (orderId) => {
+
+    const accounts = await web3.eth.getAccounts();
+    setAccounts(accounts);
+     
+   let check = await contract.methods.marketOrders(orderId).call({from: accounts[0]});
+
+   let etherAmount = check.priceRequested;
+   
+     try{
+      await contract.methods.getOrder(orderId).send({from:accounts[0], value : web3.utils.toWei(etherAmount ,"ether" ) });
+    }catch(error){
+      console.log(error)
+    }
+ 
+  }
+
+  //Buy a whitelisted order  
+  const getWhitelistedOrder = async (orderId) => {
+
+    const accounts = await web3.eth.getAccounts();
+    setAccounts(accounts);
+
+   let check2 = await contract.methods.orderWithWithelist(orderId).call({from: accounts[0]});
+    
+   let etherAmount = check2.priceRequested;
+
+   try{
+      await contract.methods.getWhitelistedOrder(orderId).send({from:accounts[0], value : web3.utils.toWei(etherAmount ,"ether" ) });
+    }catch(error){
+      console.log(error)
+    }
+  
+  }
+
+  //Cancel a market order
+  const cancelOrder = async (orderId) => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.cancelOrder(orderId).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  //Withdraw money from sold
+  const getMoney = async () => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract.methods.withdrawAmount().send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  //Mint ERC20 for an address
+  const myMint = async (address,amount) => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.myMint(address,amount).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  //Burn ERC20
+  const burnPow = async (address,amount) => {
+    try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.burnPow(address,amount).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+  //Set the amount rewarded for each stage of experience
+  const setReward = async (amount) => {
+     try{
+      const accounts = await web3.eth.getAccounts();
+      setAccounts(accounts);
+      await contract2.methods.setReward(amount).send({from: accounts[0]});
+    }catch(error){
+      console.log(error);
+      alert('Error transaction');
+    }
+  }
+
+/************************************/
+
+
+
+
+
 
 /***********Table options***********/ 
 
@@ -724,17 +907,17 @@ const App = () => {
       },
     ];
 
-    const entryTab = [1,2,3];
 
 /************************************/
 
   
   return (
-    <div>
+    <div style = {{backgroundImage: `url(${Background})`, backgroundSize: "cover", paddingBottom:'100px' }}>
       <Route path = "/" >
         <Homepage
         admin = {admin}
         accounts = {accounts}
+        UpdateETHAccount = {UpdateETHAccount}
         />
         </Route>
       <Route path = "/reward" >
@@ -746,10 +929,12 @@ const App = () => {
         dataNftPlayer = {dataNftPlayer}
         dataFongPlayer = {dataFongPlayer}
         rewardEarned = {rewardEarned}
-        rewardFONG = {rewardFONG}
         setRewardEarned = {setRewardEarned}
         setEventWithdrawCrypto = {setEventWithdrawCrypto}
         eventWithdrawCrypto = {eventWithdrawCrypto}
+        accounts = {accounts}
+        UpdateETHAccount = {UpdateETHAccount}
+
         />
       </Route>
       <Route path = "/fusion" >
@@ -762,10 +947,13 @@ const App = () => {
         getDataItemMerged = {getDataItemMerged}
         idMergedItem = {idMergedItem}
         setIdMergedItem = {setIdMergedItem}
+        accounts = {accounts}
         />
       </Route>
       <Route path = "/marketplace" >
-        <MarketPlace/>
+        <MarketPlace
+        accounts = {accounts}
+        />
       </Route> 
       <Route path = "/tournament" >
         Nothing
@@ -776,11 +964,27 @@ const App = () => {
         setMultiversePlayerFONG = {setMultiversePlayerFONG}
         updateMultiversePlayerNFT = {updateMultiversePlayerNFT} 
         updateMultiversePlayerFONG = {updateMultiversePlayerFONG}
-        account = {accounts} 
+        accounts = {accounts} 
         />
       </Route> 
+      <Route path = "/admin/setupplayer" >
+        <SetUpPlayer 
+        setMultiversePlayerNFT = {setMultiversePlayerNFT}
+        setMultiversePlayerFONG = {setMultiversePlayerFONG}
+        accounts = {accounts} 
+        />
+      </Route>
+      <Route path = "/admin/updateplayer" >
+        <UpdatePlayer
+        updateMultiversePlayerNFT = {updateMultiversePlayerNFT} 
+        updateMultiversePlayerFONG = {updateMultiversePlayerFONG}
+        accounts = {accounts} 
+        />
+      </Route>
       <Route path = "/admin" >
-        <Admin/>
+        <Admin
+        accounts = {accounts}
+        />
       </Route> 
       <Route path = "/admin/factory" >
        <Factory
@@ -791,25 +995,31 @@ const App = () => {
         setContinentWhereToFind = {setContinentWhereToFind}
         continent = {continent}
         type = {type}
+        accounts = {accounts}
         />
       </Route>     
       <Route path = "/admin/unlock" >
         <Unlock
-          entryTab = {lockedItemsTab}
-          getLockedItems = {getLockedItems}
-          unlock = {unlock}
-          />
+        entryTab = {lockedItemsTab}
+        getLockedItems = {getLockedItems}
+        unlock = {unlock}
+        accounts = {accounts}
+        updateScreenUnlock = {updateScreenUnlock}
+        />
       </Route>    
       <Route path = "/admin/lock" >
         <LockItemsScreen
         getMyItems = {getMyItems}
         unlockedItemsTab = {unlockedItemsTab}
         lock={lock}
+        accounts = {accounts}
+        updateScreenLock = {updateScreenLock}
         />
       </Route> 
       <Route path = "/admin/rewardLevel" >
         <SetLevelReward
         setReward  = {setReward}
+        accounts = {accounts}
         />
       </Route>
       <Route path = "/marketplace/viewRank" >
@@ -817,7 +1027,7 @@ const App = () => {
         list = {continent}
         getRankByContinent = {getRankByContinent }
         tabRank = {tabRank}
-
+        accounts = {accounts}
         />
       </Route> 
       <Route path = "/marketplace/viewOwner" >
@@ -825,6 +1035,8 @@ const App = () => {
         setTabItemOwner = {setTabItemOwner}
         tabItemOwner = {tabItemOwner}
         getItemsOfPlayer = {getItemsOfPlayer}
+        accounts = {accounts}
+       
 
         />
       </Route> 
@@ -834,6 +1046,8 @@ const App = () => {
         getMyItemsInOrder = {getMyItemsInOrder}
         setDataMyItemInOrder = {setDataMyItemInOrder}
         dataMyItemInOrder = {dataMyItemInOrder}
+        accounts = {accounts}
+        updateMyScreenMarketOrder = {updateMyScreenMarketOrder}
         />
       </Route> 
       <Route path = "/marketplace/manageOrderWhitelisted" >
@@ -842,14 +1056,20 @@ const App = () => {
         getMyItemsInOrder = {getMyItemsInOrder}
         setDataMyItemInOrder = {setDataMyItemInOrder}
         dataMyItemInOrder = {dataMyItemInOrder}
+        accounts = {accounts}
+        updateMyScreenMarketOrderWhitelisted = {updateMyScreenMarketOrderWhitelisted}
         />
       </Route>  
       <Route path = "/marketplace/buyOrder" >
         <BuyOrder
         getOrder = {getOrder}
+        setTabOrder = {setTabOrder}
         setCurrentMarketOrders = {setCurrentMarketOrders}
         currentMarketOrders = {currentMarketOrders}
         updateTabOrder = {updateTabOrder}
+        accounts = {accounts}
+        UpdateETHAccount = {UpdateETHAccount}
+        updateScreenMarketOrder = {updateScreenMarketOrder}
         />
       </Route>
       <Route path = "/marketplace/buyOrderWhitelisted" >
@@ -858,6 +1078,11 @@ const App = () => {
         setCurrentWhitelistedMarketOrders = {setCurrentWhitelistedMarketOrders}
         currentWhitelistedMarketOrders = {currentWhitelistedMarketOrders}
         updateTabOrderWhitelisted = {updateTabOrderWhitelisted}
+        accounts = {accounts}
+        setTabOrderWhitelisted = {setTabOrderWhitelisted}
+        setTabOrder = {setTabOrder}
+        UpdateETHAccount = {UpdateETHAccount}
+        updateScreenMarketOrderWhitelisted = {updateScreenMarketOrderWhitelisted}
         />
       </Route>
       <Route path = "/marketplace/deleteOrder" >
@@ -866,8 +1091,20 @@ const App = () => {
         getMyItemsInCurrentOrder = {getMyItemsInCurrentOrder}
         setDataMyItemInCurrentOrder = {setDataMyItemInCurrentOrder}
         dataMyItemInCurrentOrder = {dataMyItemInCurrentOrder}
+        accounts = {accounts}
+        updateCancelScreen = {updateCancelScreen}
         />
-      </Route>            
+      </Route> 
+      <Route path = "/marketplace/getbalance" >
+        <GetBalance
+        getMoney = {getMoney}
+        getBalancePlayer = {getBalancePlayer}
+        balanceOfPlayer = {balanceOfPlayer}
+        accounts = {accounts}
+        setBalanceOfPlayer = {setBalanceOfPlayer}
+        updateMoneyWithdrawn = {updateMoneyWithdrawn}
+        />
+      </Route>                   
     </div>
   );
 }

@@ -4,14 +4,14 @@ import TabUnlockedItems from "./tabUnlockedItems";
 import Link from "./link"
 
 
-const ManageOrder = ({createMarketOrder, getMyItemsInOrder,setDataMyItemInOrder, dataMyItemInOrder}) => {
+const ManageOrder = ({updateMyScreenMarketOrder, accounts,createMarketOrder, getMyItemsInOrder,setDataMyItemInOrder, dataMyItemInOrder}) => {
 
 
 	useEffect(() => {
 
 		getMyItemsInOrder();
 		
-	},[])
+	},[updateMyScreenMarketOrder])
 
 
 	const makeOrder = (amount, tokenId) => {
@@ -24,6 +24,10 @@ const ManageOrder = ({createMarketOrder, getMyItemsInOrder,setDataMyItemInOrder,
 		<div>
 			<div style = {{textAlign:'center', paddingTop:'100px' }}>
 			<div className="ui raised very padded text container segment">
+				<div className="ui green mini compact message " style = {{fontSize : "10px", color : "black"}} >
+				  <p>Current address :{accounts}</p>
+				</div>
+				<h1 className ="ui header huge" style = {{paddingBottom:'40px' }}> Create order</h1>
 				<div className="ui tabular menu">
 				  <Link href = "/marketplace/manageOrder" className="active item">
 				    Create Order Open

@@ -1,30 +1,37 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Link from "./link";
 
-const Homepage = ({accounts, admin}) => {
 
-	const superUserEnable = admin == accounts ? "item" : " disabled item"; 
-  const superUserEnable2 = admin == accounts ?   "admin" : '/'; 
+const Homepage = ({accounts, admin,UpdateETHAccount}) => {
 
-  const SuperUser = () => {
+	useEffect(() => {
 
-  	if (admin == accounts){
+		UpdateETHAccount();
 
-  		return(
-  			<Link href = "/admin"  className={`${superUserEnable}`}>
-			    Admin
-		  </Link>
+	},[])
+		
 
-  			);
-  	}
-  }
+	const superUserEnable = admin != accounts ? " " : "item"; 
 
+	const SuperUser = () => {
+		
+		if (admin == accounts){
 
+			return(
+				<Link href = "/admin"  className={`${superUserEnable}`}>
+			    	Admin
+		  		</Link>
+			);
+		}
+	}
 
 	return (
-		<div style = {{textAlign:'center', paddingTop:'100px' }}>
-			<div className="ui raised very padded text container segment"> 
-				<h1 className = "ui  huge header" > POW Multiverse </h1>
+		<div style = {{textAlign:'center', paddingTop:'100px'}}>
+			<div className="ui raised very padded text container segment stretched" >
+				<div className="ui green mini compact message " style = {{fontSize : "10px", color : "black"}} >
+				  <p>Current address :{accounts}</p>
+				</div>
+				<h1 className = "ui  huge header" style = {{paddingBottom : "40px" }} > POW Multiverse </h1>
 				<div className="ui tabular menu">
 				  <a className="active item">
 				    Player

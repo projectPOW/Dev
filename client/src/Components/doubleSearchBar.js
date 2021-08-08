@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import DoubleButton from './doubleButton';
 
-const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functionToCall1, functionToCall2, textButton1, textButton2, account}) => {
+const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functionToCall1, functionToCall2, textButton1, textButton2}) => {
 
 	const [inputText1, setinputText1] = useState('');
 	const [inputText2, setinputText2] = useState('');
@@ -18,10 +18,10 @@ const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functi
 
 	return (
 
-		<div className = "search-bar ui segment">
+		<div className = "search-bar ui ">
 			<form className = "ui form">
 				<div className = "field">
-					<h2 className = "ui second header" style = {{textAlign:'center', margin:'50px' }} >{title1}</h2>
+					<label className = "ui second header" style = {{textAlign:'left', marginTop:'30px' }} >{title1}</label>
 					<input
 						id="address"
 						type = "text"
@@ -29,7 +29,7 @@ const DoubleSearchBar = ({state1, state2,title1, title2,holder1, holder2, functi
 						onChange = {(e) => setinputText1(e.target.value)}
 						placeholder = {holder1}
 					/>
-					<h2 className = "ui second header" style = {{textAlign:'center', margin:'50px' }} >{title2}</h2>
+					<label className = "ui second header" style = {{textAlign:'left', marginTop:'30px' }} >{title2}</label>
 					<input
 						id="address"
 						type = "text"

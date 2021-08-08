@@ -14,9 +14,9 @@ const DoubleButtonActionBack = ({textButton, textBack, function1, backPath}) => 
 
 		<div className="ui grid">
 		  <div className="two wide column"></div>
-		  	<div className = "row centered " style = {{ marginBottom:'50px'}}>
-		  		<button className = "primary ui button" onClick = {onClick1} style = {{ marginTop:'50px'}}> {textButton} </button>
-		  		<div style = {{ marginTop:'50px'}}>
+		  	<div className = "row centered " style = {{ marginBottom:'10px'}}>
+		  		<button className = "primary ui button" onClick = {onClick1} style = {{ marginTop:'10px'}}> {textButton} </button>
+		  		<div style = {{ marginTop:'10px'}}>
 			  		<Link href={backPath} className = "red ui button" > 
 			 			{textBack} 		  			
 			  		</Link>

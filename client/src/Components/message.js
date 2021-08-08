@@ -1,12 +1,11 @@
 import React,{useState} from 'react';
 
-const Message = ({dataNftPlayer,dataFongPlayer,rewardEarned, rewardFONG,setRewardEarned, cleanListReward, setEventWithdrawCrypto, eventWithdrawCrypto}) => {
+const Message = ({dataNftPlayer,dataFongPlayer,rewardEarned, cleanListReward, setEventWithdrawCrypto, eventWithdrawCrypto}) => {
 
 	
 	const [active,setActive] = useState(false);
 
-	const test = [1,2,3];
-
+	
 	const onClick = (event) => {
 		setActive(true);
 		event.preventDefault();
@@ -67,6 +66,9 @@ const Message = ({dataNftPlayer,dataFongPlayer,rewardEarned, rewardFONG,setRewar
 			    <li>{`You have ${dataFongPlayer.XP} experience point`}</li>
 			  </ul>
 			</div>
+			<div style = {{textAlign :"center"}}>
+		       <button className = "ui button blue " onClick = {onClick} style = {{textAlign : "center"}}> View my rewards </button>
+		    </div>		
 			<div className={`ui positive message ${state}`} style = {{marginTop:'30px'}}>
 			  	<i className="close icon" onClick = {onClickClose}></i>
 			  		<div className="header green">
@@ -82,10 +84,7 @@ const Message = ({dataNftPlayer,dataFongPlayer,rewardEarned, rewardFONG,setRewar
 			   			"Money withrawn"
 			   			{timerBubbleERC20()}
 					</div>	  	
-			</div>
-			<div style = {{textAlign :"center"}}>
-		       <button className = "ui button  " onClick = {onClick} style = {{textAlign : "center"}}> view item</button>
-		    </div>			
+			</div>	
 		</div>
 	)
 }

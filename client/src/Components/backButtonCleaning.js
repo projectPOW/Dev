@@ -13,7 +13,7 @@ const BackButtonCleaning = ({textBack, backPath,cleanFunction }) => {
 	return (
 
 		<div>
-			<div style = {{ marginTop:'50px'}}>
+			<div style = {{ marginTop:'20px'}}>
 				<div onClick = {onClick}>
 			 		<Link href={backPath} className = "red centered ui button" > 
 			 			{textBack} 		  			

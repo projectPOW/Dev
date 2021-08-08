@@ -1,8 +1,7 @@
 import React,{useState} from 'react';
-import BackButtonCleanningBuyOrder from "./backButtonCleaningBuyOrder";
-import Link from "./link"
+import BackButtonCleanning from "./backButtonCleaning";
 
-const SimpleSearchBarMarketBuyOrder = ({title1 ,holder1,  functionToCall,textButton1, textButton2, functionToCall2}) => {
+const SimpleSearchBarMarketBuyOrder = ({title1 ,holder1,  functionToCall,textButton1, textButton2, textButton3, functionToCall2, functionToCall3}) => {
 
 	const [inputText1, setinputText1] = useState('');
 	
@@ -15,6 +14,12 @@ const SimpleSearchBarMarketBuyOrder = ({title1 ,holder1,  functionToCall,textBut
 	const cleanFunction = () => {
 
 		functionToCall2([]);
+	}
+
+	const onClick3 = (event) => {
+
+		event.preventDefault();
+		functionToCall3();
 	}
 
 
@@ -31,10 +36,12 @@ const SimpleSearchBarMarketBuyOrder = ({title1 ,holder1,  functionToCall,textBut
 						onChange = {(e) => setinputText1(e.target.value)}
 						placeholder = {holder1}
 					/>
-					<button className = "ui button blue" style = {{marginTop:'30px' }} onClick ={onClick1} >{textButton1}</button>
-					<BackButtonCleanningBuyOrder
+					<button className = "ui button green" style = {{marginTop:'30px' }} onClick ={onClick1} >{textButton1}</button>
+					<button className = "ui button blue" style = {{marginTop:'30px' }} onClick ={onClick3} >{textButton3}</button>
+					<BackButtonCleanning
 					textBack = {textButton2}
 					backPath = "/marketplace"
+					cleanFunction = {cleanFunction}
 
 					 />
 					

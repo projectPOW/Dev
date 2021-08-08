@@ -1,5 +1,4 @@
 const ContractPowNFT = artifacts.require("marketPlace");
-//const PowToken = artifacts.require("POWToken");
 const { expect } = require('chai');
 const { BN, expectRevert } = require('@openzeppelin/test-helpers');
 const time = require("./helpers/time");
@@ -11,8 +10,8 @@ chai.use(bnChai(BN));
 
 contract("Contract Pow NFT", accounts => {
 
-	const _name = "powUniq";
-	const _symbol = "POW";
+	const _name = "PowNFT";
+	const _symbol = "KNFT";
 	const _owner = accounts[0];
 	const _player1 = accounts[1];
 	const _player2 = accounts[2];
@@ -22,10 +21,8 @@ contract("Contract Pow NFT", accounts => {
 	const _monument = new BN(1);
     const _material = new BN(2);
   	const _card = new BN(3);
-  	const _initialSupply = new BN(3125000);
 
 	beforeEach(async ()=> {
-		//PowTokenInstance = await PowToken.new(new BN(200), _initialSupply);
 		ContractPowNFTInstance = await ContractPowNFT.new();
 	});
 
@@ -34,7 +31,7 @@ contract("Contract Pow NFT", accounts => {
 		expect(await ContractPowNFTInstance.get.call()).to.be.bignumber.equal(number);		
 	});
 
-	context ("Test : ERC 721", async () => {
+	xcontext ("Test : ERC 721", async () => {
 
 		it("has a name", async () =>{
 			expect(await ContractPowNFTInstance.name()).to.equal(_name);		
@@ -53,7 +50,7 @@ contract("Contract Pow NFT", accounts => {
 		});
 	})
 
-	context ("Test : The Item factory", async () => {
+	xcontext ("Test : The Item factory", async () => {
 
 		context ("Create tour eiffel in paper" , async () => {
 
@@ -173,7 +170,7 @@ contract("Contract Pow NFT", accounts => {
 		});
 	});
 
-	context("Test : The Multiverse interface", async () => {
+	xcontext("Test : The Multiverse interface", async () => {
 		it("Set a new player as authorized", async ()=> {
 
 			await expectRevert(ContractPowNFTInstance.setMultiversePlayer( _player1, "albert", {from: _player2}), "you are not authorized to set this account");
@@ -198,9 +195,9 @@ contract("Contract Pow NFT", accounts => {
 		})
 	});
 
-	describe("Test : Obtain your rewards", async ()=> {
+	xdescribe("Test : Obtain your rewards", async ()=> {
 
-		it("Get a random item in the list of available items level 2 ( 4=< id < 6) ", async ()=> {
+		xit("1st step : Get a random item in the list of available items level 2 ( 4=< id < 6) ", async ()=> {
 
 			await ContractPowNFTInstance.createItem(_card, _item, 5, {from: _owner});
 			await ContractPowNFTInstance.createItem(_card, _item, 5, {from: _owner});
@@ -210,7 +207,7 @@ contract("Contract Pow NFT", accounts => {
 			await ContractPowNFTInstance.createItem(_monument, _item, 5, {from: _owner});
 			
 			
-			let randItem = await ContractPowNFTInstance.getAvailableItem(2);
+			let randItem = await ContractPowNFTInstance.getAvailableItem.call(2);
 
 			expect(randItem).to.be.gte.BN(4)
 			expect(randItem).not.to.be.gt.BN(6);
@@ -293,7 +290,7 @@ contract("Contract Pow NFT", accounts => {
 		})
 	});
 
-	describe ("Test : The Fusion between tokens", async ()=> {
+	xdescribe ("Test : The Fusion between tokens", async ()=> {
 
 		xit("1st step : Validate the caller is the owner", async () => {
 
@@ -469,7 +466,7 @@ contract("Contract Pow NFT", accounts => {
 		})
 	});
 
-	describe ("Test : Unlock items", async ()=> {
+	xdescribe ("Test : Unlock items", async ()=> {
 
 		xit("1st step : Get an array of IDs of items owned by the owner ", async () => {
 
@@ -551,7 +548,7 @@ contract("Contract Pow NFT", accounts => {
 		})
 	});
 
-	describe ("Test : View function in the market Place", async ()=> {
+	xdescribe ("Test : View function in the market Place", async ()=> {
 
 		it("Get a list of the item's owner on a selected continent", async () => {
 
@@ -612,7 +609,7 @@ contract("Contract Pow NFT", accounts => {
 		})
 	})
 
-	describe ("Test : Selling Items", async ()=> {
+	xdescribe ("Test : Selling Items", async ()=> {
 
 		it("Set a new market order", async () => {
 
@@ -636,9 +633,11 @@ contract("Contract Pow NFT", accounts => {
 			let marketTab  = await ContractPowNFTInstance.marketOrders.call(3);
 			let soldToken =  await ContractPowNFTInstance.items.call(3);
 
-			expect(marketTab[0]).to.be.bignumber.equal(new BN(3));
-			expect(marketTab[1]).to.be.bignumber.equal(new BN(150));
-			expect(marketTab[2]).to.be.true;
+			expect(marketTab[0]).to.equal(_item);
+			expect(marketTab[1]).to.be.bignumber.equal(new BN(1));
+			expect(marketTab[2]).to.be.bignumber.equal(new BN(3));
+			expect(marketTab[3]).to.be.bignumber.equal(new BN(150));
+			expect(marketTab[4]).to.be.true;
 
 			expect(soldToken[6]).to.be.true;
 
@@ -663,8 +662,16 @@ contract("Contract Pow NFT", accounts => {
 			await ContractPowNFTInstance.setMarketOrderWhitelisted(150, 3, _player2,{from:_player1});
 
 			let withelistedOrder = await ContractPowNFTInstance.orderWithWithelist.call(3);
+			let soldToken =  await ContractPowNFTInstance.items.call(3);
 
-			expect(withelistedOrder[0]).to.equal(_player2);
+			expect(withelistedOrder[0]).to.equal(_item);
+			expect(withelistedOrder[1]).to.be.bignumber.equal(new BN(1));
+			expect(withelistedOrder[2]).to.be.bignumber.equal(new BN(3));
+			expect(withelistedOrder[3]).to.be.bignumber.equal(new BN(150));
+			expect(withelistedOrder[4]).to.equal(_player2);
+			expect(withelistedOrder[5]).to.be.true;
+
+			expect(soldToken[6]).to.be.true;
 			
 		})
 
@@ -722,11 +729,11 @@ contract("Contract Pow NFT", accounts => {
 			
 			await expectRevert(ContractPowNFTInstance.getWhitelistedOrder(2, {from:_player3, value: web3.utils.toWei(price, 'ether')}), "Not the selected reiceiver");
 			await ContractPowNFTInstance.getWhitelistedOrder(2, {from:_player2, value: web3.utils.toWei(price, 'ether')});
-			let order = await ContractPowNFTInstance.marketOrders.call(2);
+			let order = await ContractPowNFTInstance.orderWithWithelist.call(2);
 
 			expect(await ContractPowNFTInstance.balanceOf(_player3)).to.be.bignumber.equal(new BN(0));
 			expect(await ContractPowNFTInstance.balanceOf(_player2)).to.be.bignumber.equal(new BN(1));
-			expect(order[2]).to.be.false;
+			expect(order[5]).to.be.false;
 		})
 
 		it("The seller withdrawn the good amount", async () => {

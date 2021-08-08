@@ -13,7 +13,7 @@ import "./convertRewardNFT.sol";
  */
 contract fusion is convertRewardNFT {
     
-    event fusionnedItemCreate(uint tokenId);
+    event fusionnedItemCreate(uint tokenId, address indexed _to);
     event lockItem(uint tokenId);
     
     ///@dev Make the fusion between two items, create the composition, the new name, continent and tokenId
@@ -46,7 +46,7 @@ contract fusion is convertRewardNFT {
 	    items.push(Item(newName,3, newContinent,tokenId,newComposition, false, false));
 	    _safeMint(msg.sender,tokenId);
 	    
-	    emit fusionnedItemCreate(tokenId);   
+	    emit fusionnedItemCreate(tokenId, msg.sender);   
   	}
     
     ///@dev Check if the tokenId is a fusionnable monument

@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import BackButtonCleanningClose from "./backButtonCleaningClose";
-import Link from "./link"
+
 
 const DoubleSearchBarMarketOrder = ({title1, title2,holder1, holder2, functionToCall,textButton1, textButton2, functionToCall2}) => {
 
