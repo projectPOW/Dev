@@ -1,46 +1,77 @@
 # Part of the world Dapp
 
-
 ## Introduction
 
-POW est une application off chain permettant à des joueurs de découvrir le monde au travers des quizz. Dans la version actuelle de ce jeu, les joueurs peuvent aquérir des items apres plusieurs 
-parties et personnaliser leur MAP avec ceux-ci. 
+POW est une application off chain permettant à des joueurs de découvrir le monde au travers des quizz. Dans la version actuelle de ce jeu, les joueurs peuvent acquérir des items après plusieurs parties et personnaliser leur MAP avec ceux-ci.
+Dans une volonté d'évolution, l'entreprise souhaite implémenter une interface blockchain permettant aux joueurs de gagner des items sous forme de NFT et les customiser, ainsi que créer une Token economy au travers la création d'un tokenERC20 et d'une market place.
 
-Dans une volonté d'evolution, l'entreprise souhaite implementer une interface blockchain permettant
-aux joueurs de gagner des items sous forme de NFT et les customiser, ainsi que creer une Token economy au travers la creation d'un tokenERC20 et d'une market place. 
+Le centre du jeu est le quizz et le jeu POW qui est basé sur un server off-chain. Dans le futur, l'interaction avec la blockchain se fera via un oracle Chainlink afin de mettre à jour le statut des joueurs.
+Dans le cadre de cette première version de la Dapp, seul l' Admin du contrat possède l'habilitation requise permettant de mettre à jour les joueurs. Ceux-ci peuvent tout de même s'enregistrer d'eux même.
 
-Cette Dapp est une premiere version de cette evolution. Bien qu'elle ne realise pas la connexion
- on et off chain elle realise les fonctionnalites de base attendues par l'entreprise.
+## Parcours du joueur
 
+### Collecte des items
 
-## Architecture
+A son arrivée sur l'interface, s'il est déjà enregistré et qu'il a gagne des items ou case dans le jeu, le jouer peut aller collecter ses items. En arrivant sur la page de collecte des rewards, il verra affiché son nombre de reward et pourra effectuer la collecte.
 
-Voici un schema representant l'architecture general de la DAPP
+Joueur ou non-joueur peuvent tous accéder a une market place. Une option dans laquelle ils peuvent s'échanger leur Items contre des Eth. Les joueurs souhaitant vendre peuvent effectuer des ordres de vente, avec le prix de leur choix et les personnes souhaitant acheter peuvent y consulter les ordres de vente disponible. A noter qu'il y également la possibilité de d'indexer les ordres pour une adresse particulière.
 
-![General scheme](https://github.com/projectPOW/DevRepository/blob/main/images/Architecture.png)
+### Tournois
 
-Le centre du jeu est le quizz et le jeu POW qui est basé sur un server off-chain. Pour interragir 
-avec la blockchain, un oracle Chainlink est utilisé. 
-Celui-ci nous permet de faire le lien avec le statut du joueur, son niveau, ses recompenses off-chain avec son address on-chain. 
+Via la blockchain, les joueurs pourront avoir acccès a des tournois sponsorise leur permettant de remporter des tokens a l'effigie de grande marque, leur donnant ainsi accès a des avantages chez les partenaires.
 
-Une fois sur la blockchain, le joueur peut recuperer ses items via une fonction de tirage au hasard.
+Les joueurs auront également la possibilité de participer à des tournois Staking, permettant au vainqueur de remporter en mise une partie des intérêts générés.
 
-Si ces items possedent des caracteristiques compatibles, ils pourront etre fusionnés afin de creer des supers items. Les items ayant servis à la fusion son eux lock sur le jeu et reaffecter à l'adresse ETH POW.
+## Parcours Admin
 
-Le joueur a egalement la possibilite de surfer sur les map des autres joueurs et de regarder les items qu'ils possedent.
+### Enregistrement des joueurs
 
-S'il possede des GC token (token du jeu), il a la possibilite d'effectuer des achats, selon les disponibilites, sur la market place. Il peut egalement effectuer des ordres de vente sur ses propres NFT.
+La Dapp étant pour le moment déconnectée de son oracle futur, l'Admin est en charge de la mise a jour du joueur de POW vers la multivers.
 
-A ce jour, pour gagner des GC Token, le joueur doit jouer a POW. Apres un certain temps de jeu, il se verra recompenser en GC.
+### Création des items
 
+Pour que les items soient disponibles, ils doivent être créés. C'est le rôle de l'aAdmin. Tous les Items seront générés en base papier.
+
+### Lock et Unlock
+
+S'il le souhaite, l'Admin a la possibilité de rendre certains Item qu'il possède bloqués, ou alors en débloquer d'autres.
+
+## Technologie### Enregistrement des joueurs
+
+La Dapp étant pour le moment déconnectée de son oracle futur, l'Admin est en charge de la mise a jour du joueur de POW vers la multiverse.
+
+### Création des items
+
+Pour que les items soient disponibles, ils doivent être crée. C'est le rôle de l'aAdmin. Tous les Items seront génerés en base papier.
+
+### Lock et Unlock
+
+S'il le souhaite, l'Admin a la possibilite de rendre certain Item qu'il possede bloqués, ou alors en debloquer d'autres.
 
 ## Technologie
 
--Les Standards ERC20 et ERC721
--Le Front utilise React
--Le back on-chain utilise solidity version a venir
--Le back off-chain est en PHP
+La Dapp étant pour le moment déconnectée de son oracle futur, l'Admin est en charge de la mise a jour du joueur de POW vers la multiverse.
 
-## Launch 
+### Création des items
 
-Comment lancer le projet
+Pour que les items soient disponibles, ils doivent être créés. C'est le rôle de l'aAdmin. Tous les Items seront génerés en base papier.
+
+### Lock et Unlock
+
+S'il le souhaite, l'Admin a la possibilite de rendre certain Item qu'il possede bloqués, ou alors en debloquer d'autres.
+
+## Technologie
+
+<li>Les Standards ERC20 et ERC721
+<li>Le Front utilise React et Semantic UI
+<li>Le back on-chain utilise solidity compiler 0.8.1
+<li>Le back off-chain est en PHP
+
+## Launch
+
+1. Pour lancer le projet par le télécharger a partir de ce gitHub
+2. Run la commande ```$ npm install @openzeppelin/contracts``` afin de telecharger les contrats.(En cas de problème lies à ces contrats, télécharger les contrats à partir du gitHub OppenZeppelin " https://github.com/OpenZeppelin/openzeppelin-contracts" . Vous aurez besoin de ERC20, ERC721Enumerable et Ownable. Installez les dans vos fichier @oppenZeppelin.
+3. Créez un fichier ".env" avec vos codes
+
+
+Et le tour est joué !

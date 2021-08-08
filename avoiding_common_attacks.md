@@ -12,10 +12,16 @@ Même si aujourd'hui ce ne sont pas des ethers qui sont utilisés, nous appliquo
 
 Tous les items de notre jeu sont stokés dans un tableau. Ceci rend le système particulièrement sensible aux attaques DOS. 
 
-Pour éviter que ceci ne puisse avoir lieu, nous avons limite l'écriture dans le tableau au owner seulement et toutes les fonctions permettant de lire dans ce tableau sont en view.
+Pour éviter que ceci ne puisse avoir lieu, nous avons limite l'écriture dans le tableau à l'Admin seulement et toutes les fonctions permettant de lire dans ce tableau sont en view.
 
 ## Nombre aléatoire
 
 Le choix de l'item se fait avec une notion de hasard. Nous utilisons une variable randNonce dans le calcul rendant la tâche plus compliquée pour une quelconque manipulation des résultats.
+
+## Market Place
+
+Dans cette fonctionnalité, les echanges se font en ether et sont stocke sur le contrat. Pour eviter toutes possibilités de bloquage de la Dapp au moment du retrait, nous utilisons fonctions call. 
+
+De plus le retrait se fait egalement en Push Over Pull
 
 
