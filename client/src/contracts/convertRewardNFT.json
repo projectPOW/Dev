@@ -25094,7 +25094,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-08T23:15:39.136Z",
+  "updatedAt": "2021-08-09T18:37:42.586Z",
   "devdoc": {
     "details": "The selected items given to the players come from the data base create in the factory by the administrator. Only unlock items can be distributed ",
     "kind": "dev",

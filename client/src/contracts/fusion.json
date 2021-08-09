@@ -25847,7 +25847,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-08T23:15:39.161Z",
+  "updatedAt": "2021-08-09T18:37:42.619Z",
   "devdoc": {
     "details": "This contrat create a super monument with a new composition on the basis of a monument and a material.  once the new Item is created, it is sent to the player and the basis item are sent to the date database with a lock status",
     "kind": "dev",

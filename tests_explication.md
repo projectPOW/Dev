@@ -8,27 +8,36 @@ Nous commençons par vérifier quelques fonctions de base de l'ERC721 afin de no
 
 ## Test création des items
 
-La base de notre jeu est les items crées par l'entreprise POW. Pour être reconnaissables ces items sont décrit par un code appelé composition (ex :294509001). Les 3 premiers digits représentent le code du monument, les trois suivant la matière et les trois derniers le numéro de l'exemplaire.
+La base de notre jeu est constituée des items ERC721 crées par l'entreprise POW. Pour être reconnaissables ces items sont décrit par un code appelé composition (ex :294509001). Les 3 premiers digits représentent le code du monument, les trois suivant la matière et les trois derniers le numéro de l'exemplaire.
 
-Dans notre démarche TDD, nous construisons petit à petit notre code en nous assurant la création d'un code tour Eiffel, d'une tour Eiffel en papier puis du premier exemplaire.
-Ce code est ensuite dupliqué sur les différents éléments pouvant être créé dans le jeu.
+Dans notre démarche TDD, nous construisons notre code  etape par etape: 
 
-Pour finir, nous avons choisi que tous les items crées soient affectés au propriétaire du contrat. Nous le vérifions que cela se fait correctement.
+1. Nous créons un code pour le nom "Tour Eiffel" 
+2. Nous creons un code pour une "Tour Eiffel en papier" 
+3. Nous creons un code pour le "premier exemplaire d'une Tour Eiffel en papier".
+
+Ce code est ensuite dupliqué et testé pour la creation des différents éléments du jeu (matiere et carte).
+
+Pour finir, nous avons choisi que tous les items crées soient affectés au propriétaire du contrat. Nous vérifions que cela se fait correctement.
 
 ## Test ajout joueur
 
-Pour que le joueur off Chain soit reconnu sur la Dapp, il doit être enregistré. Il pourra le faire lui-même via l'address injecte sur son navigateur ou il pourra demander au Owner du contract de le faire pour lui.
-Nous devons donc dans un premier temps vérifier que le joueur est bien enregistré quand cela est demandé.
+Pour que le joueur off Chain soit reconnu sur la Dapp, il doit être enregistré. Il pourra le faire lui-même via l'address injectée sur son navigateur ou il pourra demander à l'admin de le faire pour lui.
 
-Ensuite, lorsque le joueur joue sur la partie off-Chain, il doit pouvoir avoir accès aux récompenses obtenues. Si dans la pratique le client pense utiliser un oracle type ChainLink, dans le cadre du POC ce renseignement sera fait par le Owner.
+1. Nous commencons par vérifier que l'enregistrement se fait correctement.
 
-Nous vérifions donc que le joueur est bien renseigné avec ses récompenses
+Ensuite, lorsque le joueur joue sur la partie off-Chain, il doit pouvoir avoir accès aux récompenses obtenues. Si dans le futur un oracle type ChainLink effecuera cette fonction, dans le cadre du POC ce renseignement est fait par l'Admin.
+
+2. Nous vérifions donc que le joueur est bien renseigné avec ses récompenses
 
 ## Test Get Reward
 
-Selon le niveau du joueur dans le jeu off-Chain, il peut avoir des récompenses de niveau 1 ex : des cartes de monuments, ou des récompenses de niveau 2 ex : des monuments ou des pierres précieuses.
+Selon le niveau du joueur dans le jeu off-Chain, il peut avoir des récompenses de niveau 1 (des cartes), ou des récompenses de niveau 2 (des monuments ou des matieres).
 
-Dans le contexte TDD nous construisons notre code en vérifiant la récupération du tableau des Items disponibles à la récolte (ceux appartenant aux owner), la récupération de l'indice des tokens du tableau au hasard puis l'affectation de l'item au joueur selon les récompenses qu'il peut débloquer.
+Dans le contexte TDD nous construisons notre code en vérifiant 
+1. la récupération du tableau des Items disponibles à la récolte (ceux appartenant a l'Admin), 
+2. la récupération de l'indice des tokens du tableau au hasard
+3. L'affectation de l'item au joueur selon les récompenses qu'il peut débloquer.
 
 ## Test Fusion Card
 
@@ -45,24 +54,29 @@ Une fois toutes ces étapes validées, nous aurons le code optimal nous permetta
 
 ## Tests marketPlace
 
-Ce contrat permet les echanges d'asset. Afin de nous assurer que tout se passe bien, nous suivons la methode TDD en verifiant la bonne recuperation des tableaux, des items appartenant aux joueur. 
+Ce contrat permet les echanges d'asset. Afin de nous assurer que tout se passe bien, nous suivons la methode TDD en verifiant:
+1. La bonne recuperation des tableaux, des items appartenant aux joueur. 
+2. Nous construisons l'emission des ordres de ventes ouverts et privés
+3. Nous verifions que l'achat des ordres disponibles se fait correctement 
+4. La suppression des registres de ventes
+5. Le retrait des eth par le vendeur
 
-Nous construisons ensuite le code de mise a diposition des ordres de ventes, et leur recuperation, sasn oublier leur suppresion des registres de ventes avec et l'attribution du paiment au vendeur.
 
+## Test POWToken 
 
-## Contrat POWTournament
+Ce contrat gere la creation des ERC20 et l'attribution des tokens aux joueurs selon leur niveau d'exprience. Pour le realiser, nous verifions : 
 
-A venir
+1. La recupation du montant correct selon l'experience
+2. Le rejet de deux tentatives de recuperation selon le meme nombre de XP 
+3. La recuperation de deux montant avant et apres une mise a jour
 
-## Test ERC20
+## Test powStakingTournament
 
-Nous commençons par vérifier quelques fonctions de base de l’ERC20 afin de nous assurer que notre token est conforme, Name et Symbole
+Ce contrat gere la realisation des tournois de staking. Grace à lui, l'Admin peut creer des tournois, les faire evoluer et attribuer des recompense aux vainqueurs. Le joueur lui peut s'enregistrer et recupere son staking. Pour construire ce code, nous verifions: 
 
-## Test du type et de la durée du quizz
-
-Dans nos spécifications, le système de jeu POW doit permettre à l’administrateur de fixer la durée du quizz ainsi que le thème de ce dernier.
-
-En suivant la méthode TDD, nous construisons progressivement nos deux méthodes pour configurer notre tournoi.
-
-D’autre part, nous nous assurons que seul le système POW, donc l’administrateur peut utiliser ses fonctions.
-
+1. La bonne creation d'un tournoi
+2. La bonne finalisation d'un tournois
+3. L'attribution d'un vainqueur
+4. L'enregistrement d'un joueur
+5. Le retrait du staking une fois le tournoi terminé
+6. La recuperation du staking et de la recompense pour le vainqueur.

@@ -301,6 +301,7 @@ const App = () => {
           instance2.events.newTournament()
           .on("data", (event) => {
             updateStakingTournamentTab();
+            updateTournamentPlayable();
         }).on("error", console.error);
 
           instance2.events.endPlayTournament()
@@ -311,6 +312,7 @@ const App = () => {
           instance2.events.winnerSet()
           .on("data", (event) => {
             updateTournamentWaitingForWinner();
+            updateTournamentFinished();
         }).on("error", console.error);
 
         setAdmin(owner);

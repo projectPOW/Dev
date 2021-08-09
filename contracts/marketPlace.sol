@@ -184,9 +184,9 @@ contract marketPlace is unlockItems{
 	function withdrawAmount() public {
 		require (balancePlayer[msg.sender] != 0, "nothing to withdraw");
 		uint amount = balancePlayer[msg.sender];
-		(bool success, ) = msg.sender.call{value: balancePlayer[msg.sender]}("");
+		balancePlayer[msg.sender] = 0;
+		(bool success, ) = msg.sender.call{value: amount}("");
       	require(success, 'transfer failed');
-      	balancePlayer[msg.sender] = 0;
       	emit moneyWithdrawn(amount, msg.sender);
 	}
 }
